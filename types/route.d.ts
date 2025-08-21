@@ -1,7 +1,7 @@
-declare module '@types/route' {
-  import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
-  export interface AppRouteMeta {
+declare global {
+  interface AppRouteMeta {
     title?: string
     icon?: string
     affix?: boolean
@@ -12,7 +12,7 @@ declare module '@types/route' {
     permissions?: string[]
   }
 
-  export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta' | 'children'> {
+  interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta' | 'children'> {
     meta?: AppRouteMeta
     children?: AppRouteRecordRaw[]
     hidden?: boolean
