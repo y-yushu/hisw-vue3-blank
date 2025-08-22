@@ -1,0 +1,4 @@
+{
+  // 格式化配置
+  "prettier.configPath": ".prettierrc.cjs"
+}

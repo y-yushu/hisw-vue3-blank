@@ -1,5 +1,13 @@
+<script setup lang='ts'>
+defineOptions({
+  name: ''
+})
+</script>
+
 <template>
-  <div></div>
+  <div>test</div>
 </template>
 
-<script setup lang="ts"></script>
+<style lang='scss' scoped>
+
+</style>
