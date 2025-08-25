@@ -3,7 +3,6 @@ import { useCounterStore } from '@/store/useCountStore'
 import { storeToRefs } from 'pinia'
 
 const counterStore = useCounterStore()
-console.log('🚀 ~ counterStore:', counterStore)
 const { count } = storeToRefs(counterStore)
 const { setCount } = counterStore
 const add = () => {

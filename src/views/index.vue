@@ -1,16 +1,29 @@
 <script setup lang="ts">
-import { test } from '@/api/test'
+// import { test } from '@/api/test'
+import { useRouter } from 'vue-router'
 
-const handleClick = () => {
-  console.log('click')
-  test()
+const router = useRouter()
+
+// const handleClick = () => {
+//   console.log('click')
+//   test()
+// }
+// console.log('🚀 ~ handleClick ~ handleClick:', handleClick)
+
+const handleClick2 = () => {
+  router.push('/404')
 }
 </script>
 
 <template>
-  <div>
-    home
-    <n-button type="primary" @click="handleClick"> Primary </n-button>
+  <div class="aaa">
+    <n-button type="primary" @click="handleClick2"> 去登录 </n-button>
     home
   </div>
 </template>
+
+<style scoped>
+.aaa {
+  background-color: yellow;
+}
+</style>

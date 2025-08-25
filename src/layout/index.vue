@@ -1,21 +1,35 @@
-<template>
-  <div>
-    <keep-alive :include="[]">
-      <router-view :key="key" />
-    </keep-alive>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
-// 获取 store
-// const store = useStore()
-// 获取当前路由
 const route = useRoute()
 
-// 计算属性
-// const cachedViews = computed(() => store.state.tagsView.cachedViews)
-const key = computed(() => route.path)
+// 当前组件 name
+const componentName = computed(() => route.matched[route.matched.length - 1]?.components?.default?.name)
+console.log('🚀 ~ componentName:', componentName)
+
+// 是否需要缓存
+const shouldCache = computed(() => route.meta?.noCache === false)
 </script>
+
+<template>
+  <router-view v-slot="{ Component }">
+    <transition name="fade" mode="out-in">
+      <keep-alive :include="shouldCache ? componentName : ''">
+        <component :is="Component" :key="$route.fullPath" />
+      </keep-alive>
+    </transition>
+  </router-view>
+</template>
+
+<style scoped>
+/* .fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+} */
+</style>

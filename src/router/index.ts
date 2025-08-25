@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { Router, RouteRecordRaw } from 'vue-router'
-// import type { AppRouteRecordRaw } from '@/types/route'
 import Layout from '@/layout/index.vue'
+import { createProgressGuard } from './progress'
 
 /**
  * 公共路由
@@ -25,28 +25,44 @@ export const constantRoutes: AppRouteRecordRaw[] = [
   },
   {
     path: '/register',
-    component: () => import('@/views/register/index.vue'),
-    hidden: true
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/register/index.vue')
+      }
+    ]
   },
   {
     path: '/404',
-    component: () => import('@/views/error/404.vue'),
-    hidden: true
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/error/404.vue')
+      }
+    ]
   },
   {
     path: '/401',
-    component: () => import('@/views/error/401.vue'),
-    hidden: true
-  },
-  {
-    path: '',
     component: Layout,
-    redirect: 'index',
+    hidden: true,
     children: [
       {
-        path: 'index',
+        path: '',
+        component: () => import('@/views/error/401.vue')
+      }
+    ]
+  },
+  {
+    path: '/index',
+    component: Layout,
+    children: [
+      {
+        path: '',
         component: () => import('@/views/index.vue'),
-        name: 'Index',
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
@@ -64,6 +80,10 @@ export const constantRoutes: AppRouteRecordRaw[] = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  {
+    path: '/',
+    redirect: '/index'
   }
 ]
 
@@ -147,9 +167,13 @@ export const dynamicRoutes: AppRouteRecordRaw[] = [
  * 创建路由实例
  */
 const router: Router = createRouter({
-  history: createWebHistory(), // history 模式，去掉 url 中的 #
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: constantRoutes as RouteRecordRaw[],
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
+
+// 注册路由守卫
+// 1. 进度条
+createProgressGuard(router)
 
 export default router

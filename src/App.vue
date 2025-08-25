@@ -9,5 +9,3 @@ import AppProvider from '@/components/AppProvider/index.vue'
     </AppProvider>
   </div>
 </template>
-
-<style lang="scss" scoped></style>
