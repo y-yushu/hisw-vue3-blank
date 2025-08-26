@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { Router, RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue'
 import { createProgressGuard } from './progress'
+import { createDynamicRouteGuard } from './permission'
 
 /**
  * 公共路由
@@ -20,7 +21,7 @@ export const constantRoutes: AppRouteRecordRaw[] = [
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index.vue'),
+    component: () => import('@/views/login.vue'),
     hidden: true
   },
   {
@@ -175,5 +176,7 @@ const router: Router = createRouter({
 // 注册路由守卫
 // 1. 进度条
 createProgressGuard(router)
+// 2. 动态加载用户权限
+createDynamicRouteGuard(router)
 
 export default router

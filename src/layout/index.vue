@@ -1,35 +1,14 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import PhoneMode from './mode/PhoneMode.vue'
+import LeftMode from './mode/LeftMode.vue'
+// import RightMode from './mode/RightMode.vue'
+import { useDevice } from '@/hooks/useDevice'
 
-const route = useRoute()
-
-// 当前组件 name
-const componentName = computed(() => route.matched[route.matched.length - 1]?.components?.default?.name)
-console.log('🚀 ~ componentName:', componentName)
-
-// 是否需要缓存
-const shouldCache = computed(() => route.meta?.noCache === false)
+// 当前设备型号
+const device = useDevice()
 </script>
 
 <template>
-  <router-view v-slot="{ Component }">
-    <transition name="fade" mode="out-in">
-      <keep-alive :include="shouldCache ? componentName : ''">
-        <component :is="Component" :key="$route.fullPath" />
-      </keep-alive>
-    </transition>
-  </router-view>
+  <PhoneMode v-if="device !== 'pc'" />
+  <LeftMode v-else />
 </template>
-
-<style scoped>
-/* .fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-} */
-</style>
