@@ -29,5 +29,6 @@ declare module 'vue' {
     NScrollbar: typeof import('naive-ui')['NScrollbar']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SvgIcon: typeof import('./src/components/SvgIcon/SvgIcon.vue')['default']
   }
 }

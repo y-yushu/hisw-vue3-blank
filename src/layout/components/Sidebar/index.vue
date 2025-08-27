@@ -1,102 +1,69 @@
 <script setup lang="ts">
+import type { MenuOption } from 'naive-ui'
 import Logo from './logo.vue'
-import { useAppStoreOutside } from '@/store/app'
-import Svg1 from '@/assets/svg/t1.svg'
-console.log('🚀 ~ Svg1:', Svg1)
+import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
+import { useAppStore } from '@/store/app'
+import { usePermissionStore } from '@/store/permission'
 
-defineOptions({
-  name: 'Sidebar'
-})
+// 侧边栏控制
+const appStore = useAppStore()
+// 路由权限
+const permissionStore = usePermissionStore()
 
-const useAppStore = useAppStoreOutside()
-function tttt() {
-  useAppStore.toggleOpened()
-  inverted.value = !inverted.value
+// 工具函数：把 iconName 转换成 <svg-icon>
+function renderSvgIcon(name: string) {
+  return () => h(SvgIcon, { name, color: 'currentColor', size: '1em' })
 }
 
-const inverted = ref(false)
+// 用于处理点击事件
+const keys: AppRouteRecordRaw[] = []
+let key = 0
 
-const menuOptions = [
-  {
-    label: '且听风吟',
-    key: 'hear-the-wind-sing',
-    icon: () => h(Svg1)
-    // icon: renderIcon(BookIcon)
-  },
-  {
-    label: '1973年的弹珠玩具',
-    key: 'pinball-1973',
-    // icon: renderIcon(BookIcon),
-    disabled: true,
-    children: [
-      {
-        label: '鼠',
-        key: 'rat'
-      }
-    ]
-  },
-  {
-    label: '寻羊冒险记',
-    key: 'a-wild-sheep-chase',
-    disabled: true
-    // icon: renderIcon(BookIcon)
-  },
-  {
-    label: '舞，舞，舞',
-    key: 'dance-dance-dance',
-    // icon: renderIcon(BookIcon),
-    children: [
-      {
-        type: 'group',
-        label: '人物',
-        key: 'people',
-        children: [
-          {
-            label: '叙事者',
-            key: 'narrator'
-            // icon: renderIcon(PersonIcon)
-          },
-          {
-            label: '羊男',
-            key: 'sheep-man'
-            // icon: renderIcon(PersonIcon)
-          }
-        ]
-      },
-      {
-        label: '饮品',
-        key: 'beverage',
-        // icon: renderIcon(WineIcon),
-        children: [
-          {
-            label: '威士忌',
-            key: 'whisky'
-          }
-        ]
-      },
-      {
-        label: '食物',
-        key: 'food',
-        children: [
-          {
-            label: '三明治',
-            key: 'sandwich'
-          }
-        ]
-      },
-      {
-        label: '过去增多，未来减少',
-        key: 'the-past-increases-the-future-recedes'
-      }
-    ]
-  }
-]
+function routesToMenuOptions(routes: AppRouteRecordRaw[]): MenuOption[] {
+  const menuOptions: MenuOption[] = []
+  routes.forEach(item => {
+    if (item.meta?.title) {
+      keys[key] = item
+      menuOptions.push({
+        label: item.meta.title,
+        key: key++,
+        icon: renderSvgIcon(item.meta.icon || ''),
+        children: item.children ? routesToMenuOptions(item.children) : undefined
+      })
+    }
+  })
+  return menuOptions
+}
+
+const backendMenus = routesToMenuOptions(permissionStore.sidebarRouters)
+
+function handleUpdateValue(value: string) {
+  const item = keys[Number(value)]
+  console.log('🚀 ~ handleUpdateValue ~ item:', item)
+}
 </script>
 
 <template>
   <n-scrollbar class="h-full">
-    <n-button @click="tttt">123</n-button>
     <Logo />
-    <n-menu :collapsed="inverted" :collapsed-width="64" :collapsed-icon-size="24" :options="menuOptions" />
+    <n-menu
+      class="custom-menu"
+      :collapsed="appStore.opened"
+      :indent="16"
+      :collapsed-width="64"
+      :collapsed-icon-size="24"
+      :options="backendMenus"
+      accordion
+      @update:value="handleUpdateValue"
+    />
+    <n-button @click="appStore.toggleOpened">{{ appStore.opened ? '展开' : '收起' }}</n-button>
   </n-scrollbar>
 </template>
+
+<style lang="scss" scoped>
+.custom-menu {
+  :deep(.n-menu-item-content) {
+    padding: auto !important;
+  }
+}
+</style>

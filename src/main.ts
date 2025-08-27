@@ -3,10 +3,14 @@ import App from './App.vue'
 import router from './router'
 import { setupStore } from './store'
 import './style/index.css'
+import SvgIconPlugin from '@/components/SvgIcon'
 
 const app = createApp(App)
 
 app.use(router)
+
+// 注册svg图标组件
+app.use(SvgIconPlugin)
 
 setupStore(app)
 

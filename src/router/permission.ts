@@ -1,6 +1,7 @@
 import type { Router } from 'vue-router'
 import { getToken } from '@/utils/auth'
 import { useUserStoreOutside } from '@/store/user'
+import { usePermissionStoreOutside } from '@/store/permission'
 
 // 白名单
 const whiteList = ['/login']
@@ -21,16 +22,15 @@ export const createDynamicRouteGuard = (router: Router) => {
         if (userStore.obtained) {
           return true
         } else {
-          userStore
-            .getUserInfo()
-            .then(() => {
-              return true
-            })
-            .catch(() => {
-              userStore.toLogout().then(() => {
-                return { path: `/login?redirect=${to.fullPath}` }
-              })
-            })
+          try {
+            await userStore.getUserInfo()
+            const permissionStore = usePermissionStoreOutside()
+            await permissionStore.generateRoutes()
+            return true
+          } catch (err) {
+            await userStore.toLogout()
+            return { path: `/login?redirect=${to.fullPath}` }
+          }
         }
       }
     } else {

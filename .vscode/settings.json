@@ -1,4 +1,187 @@
 {
   // 格式化配置
-  "prettier.configPath": ".prettierrc.cjs"
+  "prettier.configPath": ".prettierrc.cjs",
+  // workbench 工作台
+  // 启用列表的平滑滚动效果，让滚动更加顺畅
+  "workbench.list.smoothScrolling": true,
+  // VS Code 启动时打开一个新的未命名文件，而不是欢迎页面
+  "workbench.startupEditor": "newUntitledFile",
+  // 高亮显示已修改的标签页，方便识别哪些文件被修改了
+  "workbench.editor.highlightModifiedTabs": true,
+  // 当文件被删除时自动关闭对应的编辑器标签
+  "workbench.editor.closeOnFileDelete": true,
+
+  // editor 编辑器
+  // 设置制表符大小为 2 个空格，禁用自动检测缩进（统一使用 2 空格）
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  // 设置光标闪烁效果为展开式动画
+  "editor.cursorBlinking": "expand",
+  // 对大文件启用优化，提高大文件的编辑性能
+  "editor.largeFileOptimizations": true,
+  // 关闭无障碍支持功能，可提升性能
+  "editor.accessibilitySupport": "off",
+  // 启用光标平滑移动动画
+  "editor.cursorSmoothCaretAnimation": "on",
+  // 只在活动括号对上显示引导线
+  "editor.guides.bracketPairs": "active",
+  // 启用内联代码建议（如 GitHub Copilot）
+  "editor.inlineSuggest.enabled": true,
+  // 优先选择最近使用过的相同前缀的建议
+  "editor.suggestSelection": "recentlyUsedByPrefix",
+  // 智能处理回车键接受建议的行为
+  "editor.acceptSuggestionOnEnter": "smart",
+  // 允许在代码片段中显示快速建议
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  // 启用粘性滚动，在滚动时保持函数/类名可见
+  "editor.stickyScroll.enabled": true,
+  // 使悬停提示框可以保持显示，方便查看详细信息
+  "editor.hover.sticky": true,
+  // 设置建议插入模式为替换模式
+  "editor.suggest.insertMode": "replace",
+  // 启用括号对颜色匹配，不同层级的括号显示不同颜色
+  "editor.bracketPairColorization.enabled": true,
+  // 配置自动闭合括号和引号的行为，提高编码效率
+  "editor.autoClosingBrackets": "beforeWhitespace",
+  "editor.autoClosingDelete": "always",
+  "editor.autoClosingOvertype": "always",
+  "editor.autoClosingQuotes": "beforeWhitespace",
+  // 定义单词分隔符，影响双击选择和单词跳转行为
+  "editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?",
+  // 保存时自动修复
+  "editor.codeActionsOnSave": {
+    // 保存时自动修复 ESLint 错误
+    "source.fixAll.eslint": "explicit",
+    // 保存时自动修复 Stylelint 错误
+    "source.fixAll.stylelint": "explicit",
+    // 不自动整理导入语句
+    "source.organizeImports": "never"
+  },
+  // 设置 Prettier 为默认代码格式化工具
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // extensions 扩展
+  // 忽略 VS Code 的扩展推荐，避免干扰
+  "extensions.ignoreRecommendations": true,
+
+  // terminal 终端
+  // 启用终端光标闪烁
+  "terminal.integrated.cursorBlinking": false,
+  // 不恢复终端会话进程
+  "terminal.integrated.persistentSessionReviveProcess": "never",
+  // 启用终端标签页
+  "terminal.integrated.tabs.enabled": true,
+  // 设置终端滚动缓冲区为 10000 行
+  "terminal.integrated.scrollback": 10000,
+  // 在终端中启用粘性滚动
+  "terminal.integrated.stickyScroll.enabled": false,
+
+  // files 文件
+  // 统一使用 Unix 风格的换行符（LF）
+  "files.eol": "\n",
+  // 文件末尾自动插入换行符
+  "files.insertFinalNewline": true,
+  // 启用简化的文件对话框
+  "files.simpleDialog.enable": true,
+  // 指定特定文件扩展名的语言模式
+  "files.associations": {
+    "*.ejs": "html",
+    "*.art": "html",
+    "**/tsconfig.json": "jsonc",
+    "*.json": "jsonc",
+    "package.json": "json"
+  },
+  // 文件排除
+  // 在文件资源管理器中隐藏指定的文件和文件夹
+  "files.exclude": {
+    "**/.eslintcache": true,
+    "**/bower_components": true,
+    "**/.turbo": true,
+    "**/.idea": true,
+    "**/.vitepress": true,
+    "**/tmp": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.stylelintcache": true,
+    "**/.DS_Store": true,
+    "**/vite.config.mts.*": true,
+    "**/tea.yaml": true
+  },
+  // 排除文件监视器监控的文件夹，提高性能
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.vscode/**": true,
+    "**/node_modules/**": true,
+    "**/tmp/**": true,
+    "**/bower_components/**": true,
+    "**/dist/**": true,
+    "**/yarn.lock": true
+  },
+
+  // search 搜索设置
+  // 单击搜索结果时显示定义预览
+  "search.searchEditor.singleClickBehaviour": "peekDefinition",
+  // 搜索时不跟随符号链接
+  "search.followSymlinks": false,
+  // 在使用搜索功能时，将这些文件夹/文件排除在外
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/*.log": true,
+    "**/*.log*": true,
+    "**/bower_components": true,
+    "**/dist": true,
+    "**/elehukouben": true,
+    "**/.git": true,
+    "**/.github": true,
+    "**/.gitignore": true,
+    "**/.svn": true,
+    "**/.DS_Store": true,
+    "**/.vitepress/cache": true,
+    "**/.idea": true,
+    "**/.vscode": false,
+    "**/.yarn": true,
+    "**/tmp": true,
+    "*.xml": true,
+    "out": true,
+    "dist": true,
+    "node_modules": true,
+    "CHANGELOG.md": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
+
+  // 启用文件嵌套功能，将相关文件组织在一起显示，如测试文件嵌套在源文件下
+  "explorer.fileNesting.enabled": true,
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.keystyle": "nested"
 }

@@ -12,7 +12,8 @@ const message = useMessage()
 // 表单模型
 const loginForm = reactive<LoginRequest>({
   username: 'admin',
-  password: 'hisw123!@#',
+  // password: 'hisw123!@#',
+  password: 'admin123',
   uuid: '',
   code: '',
   rememberMe: false

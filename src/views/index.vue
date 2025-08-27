@@ -19,6 +19,8 @@ const handleClick2 = () => {
   <div class="aaa">
     <n-button type="primary" @click="handleClick2"> 去登录 </n-button>
     home
+    <svg-icon name="system/user" color="red" size="2rem" />
+    ttt
   </div>
 </template>
 

@@ -10,3 +10,13 @@ declare module 'axios' {
       | any
   }
 }
+
+declare global {
+  interface PublicResponse<T> {
+    code: number
+    msg: string
+    data: T
+  }
+
+  type DataResponse<T> = Pick<PublicResponse<T>, 'code' | 'msg' | 'data'>
+}
