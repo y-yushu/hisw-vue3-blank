@@ -45,7 +45,6 @@ export const usePermissionStore = defineStore('permission', {
     },
     setSidebarRouters(routes: AppRouteRecordRaw[]) {
       this.sidebarRouters = routes.filter(e => e.hidden === false)
-      console.log('🚀 ~ setSidebarRouters ~ this.sidebarRouters:', this.sidebarRouters)
     },
 
     // -------------------------
@@ -58,7 +57,6 @@ export const usePermissionStore = defineStore('permission', {
 
       const sidebarRoutes = filterAsyncRouter(sdata)
       const rewriteRoutes = filterAsyncRouter(rdata, true)
-
       const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
 
       // 404 页面必须放最后
@@ -66,8 +64,9 @@ export const usePermissionStore = defineStore('permission', {
 
       // vue3 用 addRoute
       asyncRoutes.forEach(r => router.addRoute(r))
-      rewriteRoutes.forEach(r => router.addRoute(r as RouteRecordRaw))
-
+      rewriteRoutes.forEach(r => {
+        router.addRoute(r as RouteRecordRaw)
+      })
       this.setRoutes(rewriteRoutes)
       this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
       this.setDefaultRoutes(sidebarRoutes)
@@ -90,39 +89,47 @@ export const usePermissionStoreOutside = () => {
 // -------------------------
 
 // 遍历后台传来的路由字符串，转换为组件对象
-function filterAsyncRouter(asyncRouterMap: AppRouteRecordRaw[], type = false) {
-  return asyncRouterMap.filter(route => {
+function filterAsyncRouter(asyncRouterMap: AppRouteRecordRaw[], type = false, isChild = false) {
+  
+  return asyncRouterMap.map(route => {
+    // 创建路由对象的副本，避免修改原对象
+    const newRoute = { ...route }
+    
     // 外链特殊处理（http/https 开头）
-    if (/^https?:\/\//.test(route.path)) {
-      route.meta = route.meta || {}
-      route.meta.link = route.path // 存真实外链
-      route.component = InnerLink
-      route.path = `/inner/${encodeURIComponent(route.path)}`
-    } else if (route.component) {
+    if (/^https?:\/\//.test(newRoute.path)) {
+      newRoute.meta = newRoute.meta || {}
+      newRoute.meta.link = newRoute.path // 存真实外链
+      newRoute.component = InnerLink
+      newRoute.path = `/inner/${encodeURIComponent(newRoute.path)}`
+    } else if (newRoute.component) {
       // Layout BlankLayout InnerLink 组件特殊处理
-      if (route.component === 'Layout') {
-        route.component = Layout
-      } else if (route.component === 'ParentView') {
-        route.component = BlankLayout
-      } else if (route.component === 'InnerLink') {
-        route.component = InnerLink
+      if (newRoute.component === 'Layout') {
+        newRoute.component = Layout
+      } else if (newRoute.component === 'ParentView') {
+        newRoute.component = BlankLayout
+      } else if (newRoute.component === 'InnerLink') {
+        newRoute.component = InnerLink
       } else {
-        route.component = loadView(route.component as string)
+        // 对于路由注册，需要将组件字符串转换为动态导入函数
+        newRoute.component = loadView(newRoute.component as string)
       }
 
-      // 确保 path 以 "/" 开头
-      if (route.path && !route.path.startsWith('/')) {
-        route.path = '/' + route.path
+      // 只有根路由需要确保 path 以 "/" 开头，子路由保持相对路径
+      if (!isChild && newRoute.path && !newRoute.path.startsWith('/')) {
+        newRoute.path = '/' + newRoute.path
       }
     }
 
-    if (route.children && route.children.length) {
-      route.children = filterAsyncRouter(route.children, type)
+    // 递归处理子路由
+    if (newRoute.children && newRoute.children.length) {
+      newRoute.children = filterAsyncRouter(newRoute.children, type, true)
     } else {
-      delete route.children
-      delete route.redirect
+      // 如果没有子路由，删除 children 和 redirect 字段
+      delete newRoute.children
+      delete newRoute.redirect
     }
-    return true
+    
+    return newRoute
   })
 }
 
@@ -145,5 +152,15 @@ export function filterDynamicRoutes(routes: any[]) {
 
 // 动态加载 views 下的组件
 export const loadView = (view: string) => {
-  return () => import(`@/views/${view}.vue`)
+  
+  // 使用 Vite 的 glob import 功能来处理动态导入
+  const modules = import.meta.glob('/src/views/**/*.vue')
+  const componentPath = `/src/views/${view}.vue`
+  
+  if (modules[componentPath]) {
+    return modules[componentPath]
+  } else {
+    // 返回一个默认的 404 组件或者空组件
+    return () => import('@/views/error/404.vue')
+  }
 }

@@ -4,11 +4,14 @@ import Logo from './logo.vue'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
 import { useAppStore } from '@/store/app'
 import { usePermissionStore } from '@/store/permission'
+import { useBreadcrumb } from '@/hooks/useBreadcrumb'
 
 // 侧边栏控制
 const appStore = useAppStore()
 // 路由权限
 const permissionStore = usePermissionStore()
+// 面包屑功能
+const { handleMenuClick, initBreadcrumb } = useBreadcrumb()
 
 // 工具函数：把 iconName 转换成 <svg-icon>
 function renderSvgIcon(name: string) {
@@ -19,16 +22,25 @@ function renderSvgIcon(name: string) {
 const keys: AppRouteRecordRaw[] = []
 let key = 0
 
-function routesToMenuOptions(routes: AppRouteRecordRaw[]): MenuOption[] {
+function routesToMenuOptions(routes: AppRouteRecordRaw[], parentPath = ''): MenuOption[] {
   const menuOptions: MenuOption[] = []
   routes.forEach(item => {
     if (item.meta?.title) {
-      keys[key] = item
+      // 构建完整路径
+      const fullPath = parentPath + (item.path.startsWith('/') ? item.path : '/' + item.path)
+      
+      // 创建包含完整路径的路由对象
+      const routeWithFullPath = {
+        ...item,
+        path: fullPath
+      }
+      
+      keys[key] = routeWithFullPath
       menuOptions.push({
         label: item.meta.title,
         key: key++,
         icon: renderSvgIcon(item.meta.icon || ''),
-        children: item.children ? routesToMenuOptions(item.children) : undefined
+        children: item.children ? routesToMenuOptions(item.children, fullPath) : undefined
       })
     }
   })
@@ -37,9 +49,16 @@ function routesToMenuOptions(routes: AppRouteRecordRaw[]): MenuOption[] {
 
 const backendMenus = routesToMenuOptions(permissionStore.sidebarRouters)
 
+// 初始化面包屑
+onMounted(() => {
+  initBreadcrumb()
+})
+
 function handleUpdateValue(value: string) {
   const item = keys[Number(value)]
-  console.log('🚀 ~ handleUpdateValue ~ item:', item)
+  if (item) {
+    handleMenuClick(item)
+  }
 }
 </script>
 
@@ -56,7 +75,6 @@ function handleUpdateValue(value: string) {
       accordion
       @update:value="handleUpdateValue"
     />
-    <n-button @click="appStore.toggleOpened">{{ appStore.opened ? '展开' : '收起' }}</n-button>
   </n-scrollbar>
 </template>
 

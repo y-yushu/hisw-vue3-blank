@@ -11,7 +11,6 @@ const router = useRouter()
 // console.log('🚀 ~ handleClick ~ handleClick:', handleClick)
 
 const handleClick2 = () => {
-  router.push('/404')
 }
 </script>
 

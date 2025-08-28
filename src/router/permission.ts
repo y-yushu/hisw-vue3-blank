@@ -19,14 +19,17 @@ export const createDynamicRouteGuard = (router: Router) => {
       } else {
         // 判断是否获取用户信息
         const userStore = useUserStoreOutside()
-        if (userStore.obtained) {
+        const permissionStore = usePermissionStoreOutside()
+        
+        if (userStore.obtained && permissionStore.routes.length > 0) {
           return true
         } else {
           try {
             await userStore.getUserInfo()
-            const permissionStore = usePermissionStoreOutside()
             await permissionStore.generateRoutes()
-            return true
+            
+            // 动态路由注册完成后，需要重新导航到目标路由
+            return { ...to, replace: true }
           } catch (err) {
             await userStore.toLogout()
             return { path: `/login?redirect=${to.fullPath}` }

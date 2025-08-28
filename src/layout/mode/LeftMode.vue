@@ -3,6 +3,9 @@ import { storeToRefs } from 'pinia'
 import { useAppStoreOutside } from '@/store/app'
 import Sidebar from '@/layout/components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain/index.vue'
+import MenuToggle from '@/components/MenuToggle/index.vue'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import Refresh from '@/components/Refresh/index.vue'
 
 defineOptions({
   name: 'LeftMode'
@@ -22,19 +25,26 @@ const { opened } = storeToRefs(useAppStore)
     <!-- 右侧主区域 -->
     <div class="flex flex-1 flex-col">
       <!-- header -->
-      <header class="flex h-16 shrink-0 items-center bg-blue-300 px-4 text-white">顶部 Header</header>
+      <header class="flex h-16 shrink-0 items-center bg-white px-4 text-white shadow-lg">
+        <MenuToggle />
+        <Refresh />
+        <Breadcrumb />
+      </header>
 
       <!-- main 内容区 -->
       <main class="flex-1 overflow-auto bg-gray-100">
         <n-scrollbar class="h-full">
           <AppMain />
-          <p>这里是内容区</p>
-          <p v-for="i in 50" :key="i">滚动测试内容 {{ i }}</p>
         </n-scrollbar>
       </main>
 
       <!-- footer -->
-      <footer class="flex h-12 shrink-0 items-center justify-center bg-blue-300 text-white">底部 Footer</footer>
+      <footer class="flex h-12 shrink-0 items-center justify-center bg-white shadow-sm">
+        <div class="flex items-center">
+          <span>Copyright © 2025 版权所有</span>
+          <span>备案号：粤ICP备12345678号</span>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
