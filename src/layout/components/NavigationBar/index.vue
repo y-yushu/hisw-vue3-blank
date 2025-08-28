@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useFullscreen } from '@/hooks/useFullscreen'
 import { useAppStore } from '@/store/app'
 import { useUserStore } from '@/store/user'
-import { useTheme } from '@/hooks/useTheme'
+import { setTheme } from '@/utils/css'
 
 defineOptions({
   name: 'NavigationBar'
@@ -29,7 +29,6 @@ const options = [
 // 主题
 const appStore = useAppStore()
 const { theme } = storeToRefs(appStore)
-const { setTheme } = useTheme()
 function handleThemeChange(e: MouseEvent) {
   appStore.toggleTheme()
   setTheme(e)
