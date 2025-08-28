@@ -28,7 +28,8 @@ export default defineConfig(({ mode }) => {
         dts: 'types/auto/auto-imports.d.ts'
       }),
       Components({
-        resolvers: [NaiveUiResolver()]
+        resolvers: [NaiveUiResolver()],
+        dts: 'types/auto/components.d.ts'
       })
     ],
     base: VITE_PUBLIC_PATH,

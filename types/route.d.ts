@@ -6,6 +6,8 @@ declare global {
     icon?: string
     noCache?: boolean
     link?: string
+    affix?: boolean
+    activeMenu?: string
   }
 
   interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta' | 'children'> {
@@ -16,5 +18,6 @@ declare global {
     alwaysShow?: boolean
     meta?: AppRouteMeta
     children?: AppRouteRecordRaw[]
+    permissions?: string[]
   }
 }
