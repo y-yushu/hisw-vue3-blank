@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Sidebar from '@/layout/components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain/index.vue'
-import Refresh from '@/components/Refresh/index.vue'
-import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import Refresh from '@/layout/components/Refresh/index.vue'
+import Breadcrumb from '@/layout/components/Breadcrumb/index.vue'
 
 defineOptions({
   name: 'LeftMode'
@@ -45,12 +45,12 @@ function toggleAside() {
       </main>
 
       <!-- footer -->
-      <footer class="flex h-12 shrink-0 items-center justify-center bg-white shadow-sm">
+      <!-- <footer class="flex h-12 shrink-0 items-center justify-center bg-white shadow-sm">
         <div class="flex items-center">
           <span>Copyright © 2025 版权所有</span>
           <span>备案号：粤ICP备12345678号</span>
         </div>
-      </footer>
+      </footer> -->
     </div>
   </div>
 </template>

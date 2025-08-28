@@ -2,10 +2,10 @@
 import { useAppStore } from '@/store/app'
 import Sidebar from '@/layout/components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain/index.vue'
-import MenuToggle from '@/components/MenuToggle/index.vue'
-import Breadcrumb from '@/components/Breadcrumb/index.vue'
-import Refresh from '@/components/Refresh/index.vue'
 import NavigationBar from '@/layout/components/NavigationBar/index.vue'
+import MenuToggle from '@/layout/components/MenuToggle/index.vue'
+import Breadcrumb from '@/layout/components/Breadcrumb/index.vue'
+import Refresh from '@/layout/components/Refresh/index.vue'
 
 defineOptions({
   name: 'LeftMode'
