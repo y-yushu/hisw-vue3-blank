@@ -3,8 +3,10 @@ import { createPinia } from 'pinia'
 
 const pinia = createPinia()
 
-export const setupStore = (app: App) => {
-  app.use(pinia)
-}
-
 export { pinia }
+
+export default {
+  install(app: App) {
+    app.use(pinia)
+  }
+}

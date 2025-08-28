@@ -1,18 +1,23 @@
 import { defineStore } from 'pinia'
+import config from '@/settings'
 import { pinia } from './index'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 
+type Theme = 'light' | 'dark' | 'auto'
 // 定义状态的类型
 interface AppState {
   opened: boolean
   breadcrumbs: BreadcrumbItem[]
+  theme: Theme
 }
 
 export const useAppStore = defineStore('app', {
-  state: (): AppState => ({ 
+  state: (): AppState => ({
     opened: false,
-    breadcrumbs: []
+    breadcrumbs: [],
+    theme: config.theme as Theme
   }),
+
   getters: {},
   actions: {
     toggleOpened() {
@@ -20,6 +25,10 @@ export const useAppStore = defineStore('app', {
     },
     setBreadcrumbs(breadcrumbs: BreadcrumbItem[]) {
       this.breadcrumbs = breadcrumbs
+    },
+    toggleTheme() {
+      this.theme = this.theme === 'light' ? 'dark' : 'light'
+      console.log('🚀 ~ toggleTheme ~ this.theme:', this.theme)
     }
   }
 })

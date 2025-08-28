@@ -1,5 +1,12 @@
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia'
 import { type GlobalThemeOverrides } from 'naive-ui'
+import { lightTheme, darkTheme } from 'naive-ui'
+import { useAppStore } from '@/store/app'
+console.log('🚀 ~ lightTheme:', lightTheme)
+
+const appStore = useAppStore()
+const { theme } = storeToRefs(appStore)
 
 const themeOverrides: GlobalThemeOverrides = {
   // common: {
@@ -16,7 +23,7 @@ defineOptions({
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider :theme="theme === 'light' ? lightTheme : darkTheme" :theme-overrides="themeOverrides">
     <n-dialog-provider>
       <n-notification-provider>
         <n-message-provider>

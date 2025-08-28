@@ -2,9 +2,6 @@
 import { useAppStore } from '@/store/app'
 import Sidebar from '@/layout/components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain/index.vue'
-import MenuToggle from '@/components/MenuToggle/index.vue'
-import Breadcrumb from '@/components/Breadcrumb/index.vue'
-import Refresh from '@/components/Refresh/index.vue'
 import NavigationBar from '@/layout/components/NavigationBar/index.vue'
 
 defineOptions({
@@ -22,15 +19,9 @@ const appStore = useAppStore()
     </n-layout-sider>
 
     <!-- 主体部分 -->
-    <n-layout class="flex h-screen flex-1 flex-col overflow-hidden">
+    <n-layout class="flex max-h-screen flex-1 flex-col overflow-hidden">
       <!-- header -->
-
       <n-layout-header bordered class="flex h-16 items-center px-4 text-white">
-        <div class="flex h-16 shrink-0 items-center bg-white px-4 text-white shadow-lg">
-          <MenuToggle />
-          <Refresh />
-          <Breadcrumb />
-        </div>
         <NavigationBar />
       </n-layout-header>
 
@@ -38,16 +29,13 @@ const appStore = useAppStore()
       <n-layout-content class="flex-1 overflow-auto">
         <n-scrollbar class="h-full">
           <AppMain />
+          <p>这里是内容区</p>
+          <p v-for="i in 50" :key="i">滚动测试内容 {{ i }}</p>
         </n-scrollbar>
       </n-layout-content>
 
       <!-- footer -->
-      <n-layout-footer bordered class="flex h-12 items-center justify-center bg-blue-300 text-white">
-        <div class="flex items-center">
-          <span>Copyright © 2025 版权所有</span>
-          <span>备案号：粤ICP备12345678号</span>
-        </div>
-      </n-layout-footer>
+      <n-layout-footer bordered class="flex h-12 items-center justify-center bg-blue-300 text-white"> 底部 Footer </n-layout-footer>
     </n-layout>
   </n-layout>
 </template>
