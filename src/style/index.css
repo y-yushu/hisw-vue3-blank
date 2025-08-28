@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* 主题切换动画 */
+@import './view-transition.css';
+
 html,
 body,
 #app {

@@ -3,7 +3,7 @@ import config from '@/settings'
 import { pinia } from './index'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 
-type Theme = 'light' | 'dark' | 'auto'
+export type Theme = 'light' | 'dark' | 'auto'
 // 定义状态的类型
 interface AppState {
   opened: boolean

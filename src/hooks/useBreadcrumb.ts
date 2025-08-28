@@ -1,7 +1,6 @@
 import { useAppStore } from '@/store/app'
 import { usePermissionStore } from '@/store/permission'
 import { useRouter } from 'vue-router'
-import type { AppRouteRecordRaw } from '@/types/route'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 
 export function useBreadcrumb() {

@@ -22,11 +22,10 @@ const appStore = useAppStore()
     </n-layout-sider>
 
     <!-- 主体部分 -->
-    <n-layout class="flex h-screen flex-1 flex-col overflow-hidden">
+    <n-layout class="h-screen" content-class="flex flex-col">
       <!-- header -->
-
-      <n-layout-header bordered class="flex h-16 items-center px-4 text-white">
-        <div class="flex h-16 shrink-0 items-center bg-white px-4 text-white shadow-lg">
+      <n-layout-header class="flex flex-row justify-between px-4">
+        <div class="flex h-16 shrink-0 items-center">
           <MenuToggle />
           <Refresh />
           <Breadcrumb />
@@ -35,14 +34,15 @@ const appStore = useAppStore()
       </n-layout-header>
 
       <!-- main 内容 -->
-      <n-layout-content class="flex-1 overflow-auto">
+      <n-layout-content class="flex-1">
         <n-scrollbar class="h-full">
           <AppMain />
+          <div v-for="i in 20" :key="i" class="h-16 border border-b-1 border-amber-500"></div>
         </n-scrollbar>
       </n-layout-content>
 
       <!-- footer -->
-      <n-layout-footer bordered class="flex h-12 items-center justify-center bg-blue-300 text-white">
+      <n-layout-footer bordered class="flex h-12 items-center justify-center">
         <div class="flex items-center">
           <span>Copyright © 2025 版权所有</span>
           <span>备案号：粤ICP备12345678号</span>

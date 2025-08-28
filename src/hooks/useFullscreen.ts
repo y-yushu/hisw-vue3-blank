@@ -1,4 +1,27 @@
-// src/hooks/useFullscreen.ts
+/**
+ * 自定义 Vue 3 Hook：useFullscreen
+ *
+ * 用于控制和检测全屏状态，支持指定目标元素进入或退出全屏。
+ * 提供了进入全屏、退出全屏、切换全屏状态以及检测当前是否全屏的功能。
+ *
+ * 功能：
+ * - 支持指定目标元素进入全屏状态。
+ * - 支持退出全屏状态。
+ * - 提供切换全屏状态的功能。
+ * - 实时检测当前是否处于全屏状态，并更新响应式的 isFullscreen 值。
+ * - 兼容主流浏览器的全屏 API。
+ *
+ * 使用方法：
+ * 1. 在组件中引入 useFullscreen Hook。
+ * 2. 调用 useFullscreen() 或 useFullscreen(target) 获取全屏控制功能。
+ * 3. 使用返回的 enter、exit 和 toggle 方法控制全屏状态。
+ * 4. 使用 isFullscreen 值检测当前是否处于全屏状态。
+ *
+ * 注意事项：
+ * - 该 Hook 依赖于浏览器的全屏 API，因此只能在浏览器环境中使用。
+ * - 如果需要指定目标元素，可以将目标元素或其 Ref 作为参数传递给 useFullscreen。
+ * - 兼容性：支持主流浏览器的全屏 API，但某些旧浏览器可能不支持。
+ */
 import { ref, onMounted, onUnmounted, type Ref } from 'vue'
 
 export function useFullscreen(target?: HTMLElement | Ref<HTMLElement | null>) {
