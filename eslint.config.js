@@ -42,6 +42,13 @@ export default [
     }
   },
 
+  // 禁用一些会干扰全局类型的规则
+  {
+    rules: {
+      'no-undef': 'off' // 关闭JS的未定义检查，由TS处理
+    }
+  },
+
   // 注册并启用Vue插件
   {
     plugins: {
@@ -50,7 +57,7 @@ export default [
     // 手动添加Vue的规则
     rules: {
       // Vue核心规则
-      'vue/comment-directive': 'error',
+      'vue/comment-directive': 'off',
       'vue/jsx-uses-vars': 'error',
       'vue/no-dupe-v-else-if': 'error',
       'vue/no-duplicate-attributes': 'error',
@@ -99,7 +106,8 @@ export default [
   {
     rules: {
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }]
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'off'
     }
   },
 

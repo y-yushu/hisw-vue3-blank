@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Sidebar from '@/layout/components/Sidebar/index.vue'
+// import Sidebar from '@/layout/components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain/index.vue'
 import Refresh from '@/layout/components/Refresh/index.vue'
 import Breadcrumb from '@/layout/components/Breadcrumb/index.vue'

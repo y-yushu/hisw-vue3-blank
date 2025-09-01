@@ -23,5 +23,5 @@ export function setTheme({ clientX, clientY }: MouseEvent) {
   setCssVar('--v3-theme-x', `${clientX}px`)
   setCssVar('--v3-theme-y', `${clientY}px`)
   setCssVar('--v3-theme-r', `${maxRadius}px`)
-  document.startViewTransition && document.startViewTransition()
+  document.startViewTransition?.()
 }
