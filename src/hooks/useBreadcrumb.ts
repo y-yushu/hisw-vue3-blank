@@ -1,6 +1,6 @@
 import { useAppStore } from '@/store/app'
 import { usePermissionStore } from '@/store/permission'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 
 export function useBreadcrumb() {
@@ -80,7 +80,12 @@ export function useBreadcrumb() {
 
   // 初始化面包屑
   const initBreadcrumb = () => {
-    appStore.setBreadcrumbs([{ title: '首页', path: '/index' }])
+    // 获取当前路由
+    const currentRoute = useRoute()
+    // 生成面包屑
+    const breadcrumbs = generateBreadcrumbs(currentRoute)
+    // 设置面包屑
+    appStore.setBreadcrumbs(breadcrumbs)
   }
 
   return {
