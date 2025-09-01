@@ -1,6 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>401</div>
+  <div>数据监控</div>
 </template>
-

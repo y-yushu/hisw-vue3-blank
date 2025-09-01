@@ -1,13 +1,5 @@
-<script setup lang="ts">
-defineOptions({
-  name: 'Operlog'
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div>operlog</div>
+  <div>操作日志</div>
 </template>
-
-<style lang="scss" scoped>
-
-</style>

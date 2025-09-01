@@ -1,13 +1,5 @@
-<script setup lang="ts">
-defineOptions({
-  name: 'Role'
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div>test</div>
+  <div>角色管理</div>
 </template>
-
-<style lang="scss" scoped>
-
-</style>

@@ -1,6 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>401</div>
+  <div>参数设置</div>
 </template>
-

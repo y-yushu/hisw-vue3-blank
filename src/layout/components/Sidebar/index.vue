@@ -28,13 +28,13 @@ function routesToMenuOptions(routes: AppRouteRecordRaw[], parentPath = ''): Menu
     if (item.meta?.title) {
       // 构建完整路径
       const fullPath = parentPath + (item.path.startsWith('/') ? item.path : '/' + item.path)
-      
+
       // 创建包含完整路径的路由对象
       const routeWithFullPath = {
         ...item,
         path: fullPath
       }
-      
+
       keys[key] = routeWithFullPath
       menuOptions.push({
         label: item.meta.title,
@@ -48,6 +48,8 @@ function routesToMenuOptions(routes: AppRouteRecordRaw[], parentPath = ''): Menu
 }
 
 const backendMenus = routesToMenuOptions(permissionStore.sidebarRouters)
+console.log('🚀 ~ permissionStore.sidebarRouters:', permissionStore.sidebarRouters)
+console.log('🚀 ~ backendMenus:', backendMenus)
 
 // 初始化面包屑
 onMounted(() => {

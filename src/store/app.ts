@@ -28,7 +28,6 @@ export const useAppStore = defineStore('app', {
     },
     toggleTheme() {
       this.theme = this.theme === 'light' ? 'dark' : 'light'
-      console.log('🚀 ~ toggleTheme ~ this.theme:', this.theme)
     }
   }
 })

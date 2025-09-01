@@ -1,6 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>401</div>
+  <div>登录日志</div>
 </template>
-

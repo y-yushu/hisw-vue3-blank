@@ -28,7 +28,7 @@ export const usePermissionStore = defineStore('permission', {
     addRoutes: [], // 动态路由
     defaultRoutes: [], // 默认路由
     topbarRouters: [], // 顶部检索路由
-    sidebarRouters: [] // 右侧侧边栏路由
+    sidebarRouters: [] // 侧边栏路由
   }),
 
   actions: {
@@ -44,7 +44,9 @@ export const usePermissionStore = defineStore('permission', {
       this.topbarRouters = routes.filter(e => e.hidden === false)
     },
     setSidebarRouters(routes: AppRouteRecordRaw[]) {
-      this.sidebarRouters = routes.filter(e => e.hidden === false)
+      const route1: AppRouteRecordRaw[] = [{ path: '/', component: Layout, meta: { title: '首页' } }]
+      const route2 = routes.filter(e => e.hidden === false)
+      this.sidebarRouters = route1.concat(route2)
     },
 
     // -------------------------
@@ -90,11 +92,10 @@ export const usePermissionStoreOutside = () => {
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap: AppRouteRecordRaw[], type = false, isChild = false) {
-  
   return asyncRouterMap.map(route => {
     // 创建路由对象的副本，避免修改原对象
     const newRoute = { ...route }
-    
+
     // 外链特殊处理（http/https 开头）
     if (/^https?:\/\//.test(newRoute.path)) {
       newRoute.meta = newRoute.meta || {}
@@ -128,7 +129,7 @@ function filterAsyncRouter(asyncRouterMap: AppRouteRecordRaw[], type = false, is
       delete newRoute.children
       delete newRoute.redirect
     }
-    
+
     return newRoute
   })
 }
@@ -152,11 +153,10 @@ export function filterDynamicRoutes(routes: any[]) {
 
 // 动态加载 views 下的组件
 export const loadView = (view: string) => {
-  
   // 使用 Vite 的 glob import 功能来处理动态导入
   const modules = import.meta.glob('/src/views/**/*.vue')
   const componentPath = `/src/views/${view}.vue`
-  
+
   if (modules[componentPath]) {
     return modules[componentPath]
   } else {

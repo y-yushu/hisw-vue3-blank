@@ -1,6 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>401</div>
+  <div>通知公告</div>
 </template>
-

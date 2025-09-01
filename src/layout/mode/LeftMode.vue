@@ -37,7 +37,6 @@ const appStore = useAppStore()
       <n-layout-content class="flex-1">
         <n-scrollbar class="h-full">
           <AppMain />
-          <div v-for="i in 20" :key="i" class="h-16 border border-b-1 border-amber-500"></div>
         </n-scrollbar>
       </n-layout-content>
 

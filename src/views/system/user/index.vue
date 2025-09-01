@@ -1,13 +1,5 @@
-<script setup lang="ts">
-defineOptions({
-  name: 'User'
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div>user</div>
+  <div>用户管理</div>
 </template>
-
-<style lang="scss" scoped>
-
-</style>

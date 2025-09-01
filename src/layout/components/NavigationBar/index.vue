@@ -68,24 +68,26 @@ function handleSelect(key: string) {
 </script>
 
 <template>
-  <div class="flex items-center space-x-2 text-[#5a5e66]">
-    <div class="cursor-pointer">
-      <Icon icon="material-symbols:search-rounded" width="24" height="24" />
-    </div>
+  <div class="flex items-center space-x-2">
+    <n-icon class="cursor-pointer" size="24">
+      <Icon icon="material-symbols:search-rounded" />
+    </n-icon>
     <!-- 全屏 -->
-    <div class="cursor-pointer" @click="fullscreen.toggle">
-      <Icon v-if="isFullscreen" icon="material-symbols:fullscreen-exit" width="24" height="24" />
-      <Icon v-else icon="material-symbols:fullscreen" width="24" height="24" />
-    </div>
+    <n-icon class="cursor-pointer" size="24" @click="fullscreen.toggle">
+      <Icon v-show="isFullscreen" icon="material-symbols:fullscreen-exit" />
+      <Icon v-show="!isFullscreen" icon="material-symbols:fullscreen" />
+    </n-icon>
     <!-- 语言 -->
     <n-dropdown v-model:value="selectedKey" trigger="hover" :options="options">
-      <Icon icon="material-symbols:language" width="24" height="24" />
+      <n-icon class="cursor-pointer" size="24">
+        <Icon icon="material-symbols:language" />
+      </n-icon>
     </n-dropdown>
     <!-- 主题 -->
-    <div class="cursor-pointer" @click="handleThemeChange">
-      <Icon v-if="theme === 'light'" icon="material-symbols:wb-sunny-rounded" width="24" height="24" />
-      <Icon v-else icon="material-symbols:moon-stars-rounded" width="24" height="24" />
-    </div>
+    <n-icon class="cursor-pointer" size="24" @click="handleThemeChange">
+      <Icon v-show="theme === 'light'" icon="material-symbols:wb-sunny-rounded" />
+      <Icon v-show="theme !== 'light'" icon="material-symbols:moon-stars-rounded" />
+    </n-icon>
     <!-- 个人 -->
     <n-dropdown trigger="click" :options="OperationMenu" @select="key => handleSelect(key)">
       <div class="flex cursor-pointer items-center space-x-1.5">
