@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useFullscreen } from '@/hooks/useFullscreen'
 import { useAppStore } from '@/store/app'
 import { useUserStore } from '@/store/user'
 import { setTheme } from '@/utils/css'
+
+const router = useRouter()
 
 defineOptions({
   name: 'NavigationBar'
@@ -37,10 +40,35 @@ function handleThemeChange(e: MouseEvent) {
 // 用户信息
 const userStore = useUserStore()
 const { name } = userStore
+
+const OperationMenu = [
+  {
+    label: '个人中心',
+    key: 'userCenter'
+  },
+  {
+    label: '退出登录',
+    key: 'logout'
+  }
+]
+
+const message = useMessage()
+// 操作
+function handleSelect(key: string) {
+  if (key === 'userCenter') {
+    router.push({ path: '/user/profile' })
+  }
+  if (key === 'logout') {
+    userStore.toLogout().then(() => {
+      message.success('退出登录成功')
+      router.push({ path: '/login' })
+    })
+  }
+}
 </script>
 
 <template>
-  <div class="flex items-center space-x-2">
+  <div class="flex items-center space-x-2 text-[#5a5e66]">
     <div class="cursor-pointer">
       <Icon icon="material-symbols:search-rounded" width="24" height="24" />
     </div>
@@ -59,9 +87,11 @@ const { name } = userStore
       <Icon v-else icon="material-symbols:moon-stars-rounded" width="24" height="24" />
     </div>
     <!-- 个人 -->
-    <div class="flex items-center">
-      <n-avatar round size="small" src="https://tse2.mm.bing.net/th/id/OIP.37r1Al9vUump5YT7SKc_egAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" />
-      <span>{{ name }}</span>
-    </div>
+    <n-dropdown trigger="click" :options="OperationMenu" @select="key => handleSelect(key)">
+      <div class="flex cursor-pointer items-center space-x-1.5">
+        <n-avatar round size="small" src="https://tse2.mm.bing.net/th/id/OIP.37r1Al9vUump5YT7SKc_egAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" />
+        <span class="font-bold">{{ name }}</span>
+      </div>
+    </n-dropdown>
   </div>
 </template>

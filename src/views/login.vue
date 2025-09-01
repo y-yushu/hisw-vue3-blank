@@ -40,10 +40,15 @@ function handleLogin() {
     if (!errors) {
       loading.value = true
       console.log('登录逻辑待实现', loginForm)
-      userStore.toLogin(loginForm).then(() => {
-        message.success('登录成功')
-        router.push('/')
-      })
+      userStore
+        .toLogin(loginForm)
+        .then(() => {
+          message.success('登录成功')
+          router.push('/')
+        })
+        .catch(() => {
+          loading.value = false
+        })
     } else {
       console.log('校验失败', errors)
     }
