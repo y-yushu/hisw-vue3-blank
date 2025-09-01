@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import Logo from './logo.vue'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
@@ -16,7 +16,7 @@ const permissionStore = usePermissionStore()
 const { handleMenuClick, initBreadcrumb } = useBreadcrumb()
 // 路由相关
 const route = useRoute()
-const defaultExpandedKeys = ref([])
+const defaultExpandedKeys = ref<number[]>([])
 const defaultValue = ref()
 
 // 工具函数：把 iconName 转换成 <svg-icon>

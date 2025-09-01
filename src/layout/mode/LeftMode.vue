@@ -6,6 +6,7 @@ import NavigationBar from '@/layout/components/NavigationBar/index.vue'
 import MenuToggle from '@/layout/components/MenuToggle/index.vue'
 import Breadcrumb from '@/layout/components/Breadcrumb/index.vue'
 import Refresh from '@/layout/components/Refresh/index.vue'
+import LayFooter from '@/layout/components/lay-footer/index.vue'
 
 defineOptions({
   name: 'LeftMode'
@@ -41,12 +42,7 @@ const appStore = useAppStore()
       </n-layout-content>
 
       <!-- footer -->
-      <n-layout-footer bordered class="flex h-12 items-center justify-center">
-        <div class="flex items-center">
-          <span>Copyright © 2025 版权所有</span>
-          <span>备案号：粤ICP备12345678号</span>
-        </div>
-      </n-layout-footer>
+      <LayFooter />
     </n-layout>
   </n-layout>
 </template>

@@ -4,6 +4,7 @@ import router from './router'
 import installPinia from './store'
 import installSvgIcon from '@/components/SvgIcon'
 import installIconify from '@/plugins/iconify'
+import settings from './settings'
 import './style/index.css'
 
 const app = createApp(App)
@@ -18,6 +19,9 @@ app.use(installSvgIcon)
 
 // 注册状态管理
 app.use(installPinia)
+
+// 修改应用标题
+document.title = settings.app_title
 
 Promise.all([
   router.isReady() // 登录路由准备完成
