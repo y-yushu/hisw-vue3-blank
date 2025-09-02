@@ -29,6 +29,9 @@ importers:
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.8.3)(vue@3.5.18(typescript@5.8.3))
+      tailwindcss-palette-generator:
+        specifier: 1.6.1
+        version: 1.6.1(tailwindcss@4.1.12)
       vue:
         specifier: ^3.5.18
         version: 3.5.18(typescript@5.8.3)
@@ -1031,6 +1034,9 @@ packages:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
 
+  chroma-js@3.1.2:
+    resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
+
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -1877,6 +1883,12 @@ packages:
   synckit@0.11.11:
     resolution: {integrity: sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  tailwindcss-palette-generator@1.6.1:
+    resolution: {integrity: sha512-zqROcxgx3c20hgx9cfb+CRbElavi/7/UvGIm5jiATAUmVJzL6YGP0Ku+TvdHe1iT7l5sz9MYponf0Od6OB1lng==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      tailwindcss: '>=3.4.0 || >=4.0.0 || insiders'
 
   tailwindcss@4.1.12:
     resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
@@ -2915,6 +2927,8 @@ snapshots:
 
   chownr@3.0.0: {}
 
+  chroma-js@3.1.2: {}
+
   color-convert@2.0.1:
     dependencies:
       color-name: 1.1.4
@@ -3679,6 +3693,11 @@ snapshots:
   synckit@0.11.11:
     dependencies:
       '@pkgr/core': 0.2.9
+
+  tailwindcss-palette-generator@1.6.1(tailwindcss@4.1.12):
+    dependencies:
+      chroma-js: 3.1.2
+      tailwindcss: 4.1.12
 
   tailwindcss@4.1.12: {}
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import eventBus from '@/utils/eventBus'
-import { useAppStore, type Theme } from '@/store/app'
+import { useAppStore, type ColorType, type Theme } from '@/store/app'
 import { setTheme } from '@/utils/css'
 
 const active = ref(false)
@@ -17,7 +17,13 @@ watch(theme, val => (model.theme = val))
 watch(asideTheme, val => (model.asideTheme = val))
 const model = reactive({
   theme: theme.value,
-  asideTheme: asideTheme.value
+  asideTheme: asideTheme.value,
+  // 色调
+  primaryColor: appStore.primaryColor,
+  successColor: appStore.successColor,
+  infoColor: appStore.infoColor,
+  warningColor: appStore.warningColor,
+  errorColor: appStore.errorColor
 })
 
 // 切换侧边栏主题
@@ -39,13 +45,18 @@ function changeTheme(value: Theme) {
     if (clickEvent.value) setTheme(clickEvent.value)
   }
 }
+
+// 改变颜色
+const updateColor = (colorType: ColorType, value: string) => {
+  appStore.setColor(colorType, value)
+}
 </script>
 
 <template>
   <n-drawer v-model:show="active" :width="340">
     <n-drawer-content title="主题风格设置">
-      <n-form ref="formRef" :label-width="80" :model="model">
-        <n-form-item label="模式" path="user.name">
+      <n-form :model="model" :label-width="80" label-align="left">
+        <n-form-item label="主题">
           <div @click="handleGroupClick">
             <n-radio-group v-model:value="model.theme" @update:value="changeTheme">
               <n-radio-button value="light">浅色模式</n-radio-button>
@@ -54,13 +65,64 @@ function changeTheme(value: Theme) {
             </n-radio-group>
           </div>
         </n-form-item>
-        <n-form-item label="模式" path="user.name">
+        <n-form-item label="侧边栏主题">
           <div @click="handleGroupClick">
             <n-radio-group v-model:value="model.asideTheme" :disabled="model.theme !== 'light'" @update:value="changeAsideTheme">
               <n-radio-button value="light">浅色模式</n-radio-button>
               <n-radio-button value="dark">深色模式</n-radio-button>
             </n-radio-group>
           </div>
+        </n-form-item>
+        <div class="mb-4 h-px w-full bg-gray-200"></div>
+        <n-form-item label="主色" label-placement="left">
+          <n-color-picker
+            v-model:value="model.primaryColor"
+            class="ml-auto"
+            :modes="['hex']"
+            style="width: 100px"
+            :show-alpha="false"
+            :on-complete="color => updateColor('primary', color)"
+          />
+        </n-form-item>
+        <n-form-item label="成功色" label-placement="left">
+          <n-color-picker
+            v-model:value="model.successColor"
+            class="ml-auto"
+            :modes="['hex']"
+            style="width: 100px"
+            :show-alpha="false"
+            :on-complete="color => updateColor('success', color)"
+          />
+        </n-form-item>
+        <n-form-item label="信息色" label-placement="left">
+          <n-color-picker
+            v-model:value="model.infoColor"
+            class="ml-auto"
+            :modes="['hex']"
+            style="width: 100px"
+            :show-alpha="false"
+            :on-complete="color => updateColor('info', color)"
+          />
+        </n-form-item>
+        <n-form-item label="警告色" label-placement="left">
+          <n-color-picker
+            v-model:value="model.warningColor"
+            class="ml-auto"
+            :modes="['hex']"
+            style="width: 100px"
+            :show-alpha="false"
+            :on-complete="color => updateColor('warning', color)"
+          />
+        </n-form-item>
+        <n-form-item label="错误色" label-placement="left">
+          <n-color-picker
+            v-model:value="model.errorColor"
+            class="ml-auto"
+            :modes="['hex']"
+            style="width: 100px"
+            :show-alpha="false"
+            :on-complete="color => updateColor('error', color)"
+          />
         </n-form-item>
       </n-form>
     </n-drawer-content>
