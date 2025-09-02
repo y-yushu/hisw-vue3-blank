@@ -2,6 +2,8 @@
 // import type { BreadcrumbItem } from 'naive-ui'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store/app'
+import { useBreadcrumb } from '@/hooks/useBreadcrumb'
+import { onMounted, watch } from 'vue'
 
 defineOptions({
   name: 'Breadcrumb'
@@ -9,6 +11,7 @@ defineOptions({
 
 const route = useRoute()
 const appStore = useAppStore()
+const { updateBreadcrumbByPath } = useBreadcrumb()
 
 const breadcrumbItems = computed(() => {
   // 优先使用 store 中的面包屑数据
@@ -28,6 +31,20 @@ const breadcrumbItems = computed(() => {
       key: item.path,
       to: item.path
     }))
+})
+
+// 监听路由变化，自动更新面包屑
+watch(
+  () => route.path,
+  (newPath) => {
+    updateBreadcrumbByPath(newPath)
+  },
+  { immediate: true }
+)
+
+// 组件挂载时初始化面包屑
+onMounted(() => {
+  updateBreadcrumbByPath(route.path)
 })
 </script>
 

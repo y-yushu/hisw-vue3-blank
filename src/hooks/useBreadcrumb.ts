@@ -1,11 +1,13 @@
 import { useAppStore } from '@/store/app'
 import { usePermissionStore } from '@/store/permission'
+import { useTabsStore } from '@/store/tabs'
 import { useRouter, useRoute } from 'vue-router'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 
 export function useBreadcrumb() {
   const appStore = useAppStore()
   const permissionStore = usePermissionStore()
+  const tabsStore = useTabsStore()
   const router = useRouter()
 
   // 生成面包屑路径
@@ -64,13 +66,16 @@ export function useBreadcrumb() {
     return breadcrumbs
   }
 
-  // 处理菜单点击，更新面包屑并跳转路由
+  // 处理菜单点击，更新面包屑、添加页签并跳转路由
   const handleMenuClick = (route: AppRouteRecordRaw) => {
     console.log('🚀 ~ handleMenuClick ~ route:', route)
     if (route && route.path) {
       // 生成面包屑
       const breadcrumbs = generateBreadcrumbs(route)
       appStore.setBreadcrumbs(breadcrumbs)
+
+      // 添加页签
+      tabsStore.addTabFromRoute(route)
 
       // 跳转到对应路由
       console.log(route.path)
@@ -88,9 +93,40 @@ export function useBreadcrumb() {
     appStore.setBreadcrumbs(breadcrumbs)
   }
 
+  // 根据路径更新面包屑
+  const updateBreadcrumbByPath = (path: string) => {
+    // 根据路径查找对应的路由配置
+    const findRouteByPath = (
+      routes: AppRouteRecordRaw[],
+      targetPath: string,
+      parentPath = ''
+    ): AppRouteRecordRaw | null => {
+      for (const route of routes) {
+        const fullPath = parentPath + (route.path.startsWith('/') ? route.path : '/' + route.path)
+        
+        if (fullPath === targetPath) {
+          return { ...route, path: fullPath }
+        }
+        
+        if (route.children) {
+          const found = findRouteByPath(route.children, targetPath, fullPath)
+          if (found) return found
+        }
+      }
+      return null
+    }
+
+    const routeConfig = findRouteByPath(permissionStore.sidebarRouters, path)
+    if (routeConfig) {
+      const breadcrumbs = generateBreadcrumbs(routeConfig)
+      appStore.setBreadcrumbs(breadcrumbs)
+    }
+  }
+
   return {
     generateBreadcrumbs,
     handleMenuClick,
-    initBreadcrumb
+    initBreadcrumb,
+    updateBreadcrumbByPath
   }
 }

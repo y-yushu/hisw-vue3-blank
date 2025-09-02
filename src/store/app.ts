@@ -9,13 +9,15 @@ interface AppState {
   opened: boolean
   breadcrumbs: BreadcrumbItem[]
   theme: Theme
+  currentMenuPath: string // 当前选中的菜单路径
 }
 
 export const useAppStore = defineStore('app', {
   state: (): AppState => ({
     opened: false,
     breadcrumbs: [],
-    theme: config.theme as Theme
+    theme: config.theme as Theme,
+    currentMenuPath: ''
   }),
 
   getters: {},
@@ -28,6 +30,9 @@ export const useAppStore = defineStore('app', {
     },
     toggleTheme() {
       this.theme = this.theme === 'light' ? 'dark' : 'light'
+    },
+    setCurrentMenuPath(path: string) {
+      this.currentMenuPath = path
     }
   }
 })

@@ -44,7 +44,7 @@ export const usePermissionStore = defineStore('permission', {
       this.topbarRouters = routes.filter(e => e.hidden === false)
     },
     setSidebarRouters(routes: AppRouteRecordRaw[]) {
-      const route1: AppRouteRecordRaw[] = [{ path: '/', component: Layout, meta: { title: '首页' } }]
+      const route1: AppRouteRecordRaw[] = [{ path: '/index', component: Layout, meta: { title: '首页', icon: 'dashboard', affix: true } }]
       const route2 = routes.filter(e => e.hidden === false)
       this.sidebarRouters = route1.concat(route2)
     },
