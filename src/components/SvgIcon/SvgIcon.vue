@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { defineProps, computed, inject } from 'vue'
-import SvgNa from '@/assets/svg/na.svg'
 
 const props = defineProps<{
   name: string
@@ -23,6 +22,5 @@ const SvgComp = computed(() => iconMap?.[props.name])
 <template>
   <span class="inline-block" :class="props.className" :style="{ color, width: size, height: size }">
     <component v-if="SvgComp" :is="SvgComp" :style="{ fill: color, width: size, height: size }" />
-    <SvgNa v-else :style="{ width: size, height: size }" />
   </span>
 </template>
