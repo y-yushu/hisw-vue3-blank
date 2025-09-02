@@ -10,6 +10,7 @@ interface AppState {
   breadcrumbs: BreadcrumbItem[]
   theme: Theme
   asideTheme: Theme // 侧边栏颜色
+  currentMenuPath: string // 当前选中的菜单路径
 }
 
 export const useAppStore = defineStore('app', {
@@ -17,7 +18,8 @@ export const useAppStore = defineStore('app', {
     opened: false,
     breadcrumbs: [],
     theme: config.theme as Theme,
-    asideTheme: config.asideTheme as Theme
+    asideTheme: config.asideTheme as Theme,
+    currentMenuPath: ''
   }),
   getters: {
     // 显示的具体的模式，auto则根据系统主题自动切换
@@ -50,6 +52,9 @@ export const useAppStore = defineStore('app', {
     // 切换侧边栏主题
     toggleAsideTheme(theme: Theme) {
       this.asideTheme = theme
+    },
+    setCurrentMenuPath(path: string) {
+      this.currentMenuPath = path
     }
   }
 })

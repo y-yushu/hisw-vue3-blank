@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { Router, RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue'
+import BlankLayout from '@/layout/blank.vue'
 import { createProgressGuard } from './progress'
 import { createDynamicRouteGuard } from './permission'
 
@@ -37,7 +38,7 @@ export const constantRoutes: AppRouteRecordRaw[] = [
   },
   {
     path: '/404',
-    component: Layout,
+    component: BlankLayout,
     hidden: true,
     children: [
       {
@@ -48,7 +49,7 @@ export const constantRoutes: AppRouteRecordRaw[] = [
   },
   {
     path: '/401',
-    component: Layout,
+    component: BlankLayout,
     hidden: true,
     children: [
       {

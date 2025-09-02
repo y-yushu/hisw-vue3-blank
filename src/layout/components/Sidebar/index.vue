@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import Logo from './logo.vue'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
@@ -16,8 +16,8 @@ const permissionStore = usePermissionStore()
 const { handleMenuClick, initBreadcrumb } = useBreadcrumb()
 // 路由相关
 const route = useRoute()
-const defaultExpandedKeys = ref<number[]>([])
-const defaultValue = ref()
+const expandedKeys = ref([])
+const selectedKey = ref<number | null>(null)
 
 // 工具函数：把 iconName 转换成 <svg-icon>
 function renderSvgIcon(name: string) {
@@ -55,26 +55,26 @@ function routesToMenuOptions(routes: AppRouteRecordRaw[], parentPath = ''): Menu
 
 const backendMenus = routesToMenuOptions(permissionStore.sidebarRouters)
 
-// 根据当前路由地址获取默认展开的菜单键和选中的菜单项
-function getMenuStateByRoute() {
-  const currentPath = route.path
-  let selectedKey = ''
-  const expandedKeys: string[] = []
+// 根据当前路由地址获取菜单状态
+function updateMenuStateByRoute(currentPath?: string) {
+  const targetPath = currentPath || route.path
+  let foundSelectedKey: number | null = null
+  const foundExpandedKeys: number[] = []
 
   // 递归查找菜单项
-  function findMenuByPath(menuItems: MenuOption[], parentKeys: string[] = []): boolean {
+  function findMenuByPath(menuItems: MenuOption[], parentKeys: number[] = []): boolean {
     for (let i = 0; i < menuItems.length; i++) {
       const menuItem = menuItems[i]
-      const currentKey = String(menuItem.key)
-      const routeItem = keys[Number(currentKey)]
+      const currentKey = Number(menuItem.key)
+      const routeItem = keys[currentKey]
 
-      if (routeItem && routeItem.path === currentPath) {
-        selectedKey = currentKey
-        // 将所有父级菜单键和当前选中的键都加入expandedKeys
-        expandedKeys.push(...parentKeys)
+      if (routeItem && routeItem.path === targetPath) {
+        foundSelectedKey = currentKey
+        // 将所有父级菜单键加入expandedKeys
+        foundExpandedKeys.push(...parentKeys)
         // 如果当前项有子菜单，也将其加入展开键
         if (menuItem.children && menuItem.children.length > 0) {
-          expandedKeys.push(currentKey)
+          foundExpandedKeys.push(currentKey)
         }
         return true
       }
@@ -91,30 +91,46 @@ function getMenuStateByRoute() {
 
   findMenuByPath(backendMenus)
 
-  return {
-    selectedKey,
-    expandedKeys: [...new Set(expandedKeys)] // 去重
-  }
+  // 更新响应式状态
+  selectedKey.value = foundSelectedKey
+  expandedKeys.value = [...new Set(foundExpandedKeys)] // 去重
 }
 
-// 初始化面包屑
+// 监听路由变化，更新菜单状态
+watch(
+  () => route.path,
+  (newPath) => {
+    updateMenuStateByRoute(newPath)
+    appStore.setCurrentMenuPath(newPath)
+  },
+  { immediate: true }
+)
+
+// 监听store中的菜单路径变化（用于页签点击同步）
+watch(
+  () => appStore.currentMenuPath,
+  (newPath) => {
+    if (newPath && newPath !== route.path) {
+      updateMenuStateByRoute(newPath)
+    }
+  }
+)
+
+// 初始化
 onMounted(() => {
   initBreadcrumb()
-  initMenuState()
+  updateMenuStateByRoute()
 })
-
-function initMenuState() {
-  const menuState = getMenuStateByRoute()
-  defaultValue.value = Number(menuState.selectedKey)
-  let expandedKeys = menuState.expandedKeys.map(Number)
-  defaultExpandedKeys.value = [...expandedKeys, Number(menuState.selectedKey)]
-}
 
 function handleUpdateValue(value: string) {
   const item = keys[Number(value)]
   if (item) {
     handleMenuClick(item)
   }
+}
+
+function handleUpdateExpandedKeys(keys: Array<string | number>) {
+  expandedKeys.value = keys.map(key => Number(key))
 }
 </script>
 
@@ -128,10 +144,10 @@ function handleUpdateValue(value: string) {
       :collapsed-width="64"
       :collapsed-icon-size="24"
       :options="backendMenus"
-      :default-value="defaultValue"
-      :default-expanded-keys="defaultExpandedKeys"
-      :watch-props="['defaultValue', 'defaultExpandedKeys']"
+      :value="selectedKey"
+      :expanded-keys="expandedKeys"
       @update:value="handleUpdateValue"
+      @update:expanded-keys="handleUpdateExpandedKeys"
     />
   </n-scrollbar>
 </template>

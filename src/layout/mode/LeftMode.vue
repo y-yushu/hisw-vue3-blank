@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store/app'
+import { useTabsStore } from '@/store/tabs'
 import Sidebar from '@/layout/components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain/index.vue'
 import NavigationBar from '@/layout/components/NavigationBar/index.vue'
@@ -7,8 +10,25 @@ import MenuToggle from '@/layout/components/MenuToggle/index.vue'
 import Breadcrumb from '@/layout/components/Breadcrumb/index.vue'
 import Refresh from '@/layout/components/Refresh/index.vue'
 import LayFooter from '@/layout/components/lay-footer/index.vue'
+import TagNavigation from '@/layout/components/TagNavigation/index.vue'
+
+defineOptions({
+  name: 'LeftMode'
+})
 
 const appStore = useAppStore()
+const tabsStore = useTabsStore()
+const route = useRoute()
+
+onMounted(() => {
+  // 初始化默认首页页签
+  tabsStore.initDefaultTab()
+  
+  // 如果当前路由不是首页，也添加到页签中
+  if (route.path !== '/index' && route.path !== '/' && route.meta?.title) {
+    tabsStore.addTabFromRoute(route)
+  }
+})
 </script>
 
 <template>
@@ -21,15 +41,19 @@ const appStore = useAppStore()
     <!-- 主体部分 -->
     <n-layout class="h-screen" content-class="flex flex-col">
       <!-- header -->
-      <n-layout-header class="flex flex-row justify-between px-4">
-        <div class="flex h-16 shrink-0 items-center">
-          <MenuToggle />
-          <Refresh />
-          <Breadcrumb />
+      <n-layout-header bordered class=" px-4 shadow-sm">
+        <div class="flex flex-row justify-between">
+          <div class="flex h-12 shrink-0 items-center">
+            <MenuToggle />
+            <Refresh />
+            <Breadcrumb />
+          </div>
+          <NavigationBar />
         </div>
-        <NavigationBar />
+        <div class="flex py-2 h-8 items-center">
+          <TagNavigation />
+        </div>
       </n-layout-header>
-
       <!-- main 内容 -->
       <n-layout-content class="flex-1">
         <n-scrollbar class="h-full">
