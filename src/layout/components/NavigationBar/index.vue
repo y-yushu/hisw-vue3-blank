@@ -5,6 +5,7 @@ import { useFullscreen } from '@/hooks/useFullscreen'
 import { useAppStore } from '@/store/app'
 import { useUserStore } from '@/store/user'
 import { setTheme } from '@/utils/css'
+import eventBus from '@/utils/eventBus'
 
 const router = useRouter()
 
@@ -65,6 +66,11 @@ function handleSelect(key: string) {
     })
   }
 }
+
+// 打开抽屉
+function handleDrawerControlOpen() {
+  eventBus.emit('drawer-control-open', true)
+}
 </script>
 
 <template>
@@ -84,9 +90,9 @@ function handleSelect(key: string) {
       </n-icon>
     </n-dropdown>
     <!-- 主题 -->
-    <n-icon class="cursor-pointer" size="24" @click="handleThemeChange">
+    <n-icon v-if="theme !== 'auto'" class="cursor-pointer" size="24" @click="handleThemeChange">
       <Icon v-show="theme === 'light'" icon="material-symbols:wb-sunny-rounded" />
-      <Icon v-show="theme !== 'light'" icon="material-symbols:moon-stars-rounded" />
+      <Icon v-show="theme === 'dark'" icon="material-symbols:moon-stars-rounded" />
     </n-icon>
     <!-- 个人 -->
     <n-dropdown trigger="click" :options="OperationMenu" @select="key => handleSelect(key)">
@@ -95,5 +101,9 @@ function handleSelect(key: string) {
         <span class="font-bold">{{ name }}</span>
       </div>
     </n-dropdown>
+    <!-- 打开样式抽屉 -->
+    <n-icon class="cursor-pointer" size="20" @click="handleDrawerControlOpen">
+      <Icon icon="mage:dots" />
+    </n-icon>
   </div>
 </template>

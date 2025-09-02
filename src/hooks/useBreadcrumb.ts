@@ -66,7 +66,6 @@ export function useBreadcrumb() {
 
   // 处理菜单点击，更新面包屑并跳转路由
   const handleMenuClick = (route: AppRouteRecordRaw) => {
-    console.log('🚀 ~ handleMenuClick ~ route:', route)
     if (route && route.path) {
       // 生成面包屑
       const breadcrumbs = generateBreadcrumbs(route)
@@ -83,7 +82,7 @@ export function useBreadcrumb() {
     // 获取当前路由
     const currentRoute = useRoute()
     // 生成面包屑
-    const breadcrumbs = generateBreadcrumbs(currentRoute)
+    const breadcrumbs = generateBreadcrumbs(currentRoute as AppRouteRecordRaw)
     // 设置面包屑
     appStore.setBreadcrumbs(breadcrumbs)
   }

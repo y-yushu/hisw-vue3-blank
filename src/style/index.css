@@ -3,6 +3,9 @@
 /* 主题切换动画 */
 @import './view-transition.css';
 
+/* 重写 naive-ui 主题 */
+@import './theme.css';
+
 html,
 body,
 #app {

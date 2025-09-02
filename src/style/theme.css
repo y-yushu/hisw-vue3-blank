@@ -1,0 +1,15 @@
+/* 侧边栏背景色 */
+.cu-custon-sider {
+  background-color: #ffffff;
+}
+.cu-custon-sider-title {
+  color: #393639;
+  transition: color 0.5s;
+}
+
+.dark-aisde .cu-custon-sider {
+  background-color: #001428 !important;
+}
+.dark-aisde .cu-custon-sider-title {
+  color: #ffffff;
+}

@@ -25,3 +25,66 @@ export function setTheme({ clientX, clientY }: MouseEvent) {
   setCssVar('--v3-theme-r', `${maxRadius}px`)
   document.startViewTransition?.()
 }
+
+/**
+ * 向body元素添加class
+ * @param className 要添加的class名称
+ * @returns 是否成功添加
+ */
+export function addClassToBody(className: string): boolean {
+  try {
+    if (document.body) {
+      // 使用classList.add添加class
+      document.body.classList.add(className)
+
+      // 检查class是否成功添加
+      const hasClass = document.body.classList.contains(className)
+      if (!hasClass) {
+        console.warn(`Failed to add class "${className}" to body.`)
+      }
+
+      return hasClass
+    } else {
+      console.error('document.body is not available yet.')
+      return false
+    }
+  } catch (error) {
+    console.error(`Error adding class "${className}" to body:`, error)
+    return false
+  }
+}
+
+/**
+ * 从body元素移除class
+ * @param className 要移除的class名称
+ * @returns 是否成功移除
+ */
+export function removeClassFromBody(className: string): boolean {
+  try {
+    if (document.body) {
+      // 检查class是否存在
+      const hasClass = document.body.classList.contains(className)
+      if (!hasClass) {
+        // class不存在也算成功移除
+        return true
+      }
+
+      // 使用classList.remove移除class
+      document.body.classList.remove(className)
+
+      // 检查class是否成功移除
+      const stillHasClass = document.body.classList.contains(className)
+      if (stillHasClass) {
+        console.warn(`Failed to remove class "${className}" from body.`)
+      }
+
+      return !stillHasClass
+    } else {
+      console.error('document.body is not available yet.')
+      return false
+    }
+  } catch (error) {
+    console.error(`Error removing class "${className}" from body:`, error)
+    return false
+  }
+}

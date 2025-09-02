@@ -11,7 +11,7 @@ const appStore = useAppStore()
     <transition-group name="slide-vertical">
       <div v-show="!appStore.opened" key="full" class="absolute flex w-full items-center justify-center space-x-2 px-4 py-2">
         <img class="h-8 w-8" :src="logo" alt="" />
-        <h1 class="overflow-hidden text-lg font-bold text-ellipsis whitespace-nowrap">{{ config.app_title }}</h1>
+        <h1 class="cu-custon-sider-title overflow-hidden text-lg font-bold text-ellipsis whitespace-nowrap">{{ config.app_title }}</h1>
       </div>
       <div v-show="appStore.opened" key="logo-only" class="absolute flex w-full items-center justify-center space-x-2 px-4 py-2">
         <img class="h-8 w-8" :src="logo" alt="" />

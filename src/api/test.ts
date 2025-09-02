@@ -6,10 +6,7 @@ const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
 const { message } = createDiscreteApi(['message', 'dialog', 'notification', 'loadingBar', 'modal'], {
   configProviderProps: configProviderPropsRef
 })
-console.log('🚀 ~ test ~ message:', message)
 
 export const test = () => {
-  console.log('🚀 ~ test ~ test:')
-
   message.info('Message')
 }

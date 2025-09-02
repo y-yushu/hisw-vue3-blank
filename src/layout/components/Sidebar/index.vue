@@ -54,8 +54,6 @@ function routesToMenuOptions(routes: AppRouteRecordRaw[], parentPath = ''): Menu
 }
 
 const backendMenus = routesToMenuOptions(permissionStore.sidebarRouters)
-console.log('🚀 ~ permissionStore.sidebarRouters:', permissionStore.sidebarRouters)
-console.log('🚀 ~ backendMenus:', backendMenus)
 
 // 根据当前路由地址获取默认展开的菜单键和选中的菜单项
 function getMenuStateByRoute() {
@@ -99,8 +97,6 @@ function getMenuStateByRoute() {
   }
 }
 
-console.log('🚀 ~ 默认展开:', defaultExpandedKeys.value)
-
 // 初始化面包屑
 onMounted(() => {
   initBreadcrumb()
@@ -126,7 +122,7 @@ function handleUpdateValue(value: string) {
   <n-scrollbar class="h-full">
     <Logo />
     <n-menu
-      class="custom-menu"
+      class="cu-custon-menu"
       :collapsed="appStore.opened"
       :indent="16"
       :collapsed-width="64"

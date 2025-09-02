@@ -8,17 +8,13 @@ import Breadcrumb from '@/layout/components/Breadcrumb/index.vue'
 import Refresh from '@/layout/components/Refresh/index.vue'
 import LayFooter from '@/layout/components/lay-footer/index.vue'
 
-defineOptions({
-  name: 'LeftMode'
-})
-
 const appStore = useAppStore()
 </script>
 
 <template>
   <n-layout class="h-screen" has-sider>
     <!-- 侧边栏 -->
-    <n-layout-sider bordered collapse-mode="width" :collapsed="appStore.opened" :collapsed-width="64" :width="200">
+    <n-layout-sider class="cu-custon-sider" bordered collapse-mode="width" :collapsed="appStore.opened" :collapsed-width="64" :width="200">
       <Sidebar />
     </n-layout-sider>
 
