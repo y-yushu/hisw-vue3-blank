@@ -199,8 +199,8 @@ onMounted(() => {
 
 <template>
   <div class="tag-navigation" @click="handleClickOutside">
-    <NScrollbar ref="scrollbarRef" class="w-full" x-scrollable>
-      <div class="flex gap-1 px-2 min-w-max">
+    <NScrollbar ref="scrollbarRef" class="w-full" :x-scrollable="true" style="max-width: 100%;">
+      <div class="flex gap-1 px-2 pb-3 min-w-max" style="width: max-content;">
         <NTag
           v-for="tab in tabsList"
           :key="tab.name"
@@ -239,4 +239,17 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.tag-navigation {
+  overflow: hidden; /* 确保父容器不会溢出 */
+}
+
+/* 确保NScrollbar能正确处理横向滚动 */
+:deep(.n-scrollbar-container) {
+  overflow-x: auto !important;
+}
+
+:deep(.n-scrollbar-content) {
+  display: flex;
+  width: max-content;
+}
 </style>
