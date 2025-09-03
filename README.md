@@ -10,6 +10,7 @@ Vue 3 + TypeScript + Vite + tailwindcss + naive-ui + pinia
 1. 组件已全局引入，可在vue文件中直接使用
 2. `useMessage`等方法在`setup`可直接使用
 3. `useMessage`在`setup`外部需通过`src\utils\message.ts`引入使用
+4. 每个路由页需要有一个根div标签，不要以`n-scrollbar`等多节点标签作为根标签
 
 ### icon使用
 

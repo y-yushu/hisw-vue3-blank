@@ -16,7 +16,7 @@ const permissionStore = usePermissionStore()
 const { handleMenuClick, initBreadcrumb } = useBreadcrumb()
 // 路由相关
 const route = useRoute()
-const expandedKeys = ref([])
+const expandedKeys = ref<number[]>([])
 const selectedKey = ref<number | null>(null)
 
 // 工具函数：把 iconName 转换成 <svg-icon>
@@ -99,7 +99,7 @@ function updateMenuStateByRoute(currentPath?: string) {
 // 监听路由变化，更新菜单状态
 watch(
   () => route.path,
-  (newPath) => {
+  newPath => {
     updateMenuStateByRoute(newPath)
     appStore.setCurrentMenuPath(newPath)
   },
@@ -109,7 +109,7 @@ watch(
 // 监听store中的菜单路径变化（用于页签点击同步）
 watch(
   () => appStore.currentMenuPath,
-  (newPath) => {
+  newPath => {
     if (newPath && newPath !== route.path) {
       updateMenuStateByRoute(newPath)
     }

@@ -23,7 +23,7 @@ const route = useRoute()
 onMounted(() => {
   // 初始化默认首页页签
   tabsStore.initDefaultTab()
-  
+
   // 如果当前路由不是首页，也添加到页签中
   if (route.path !== '/index' && route.path !== '/' && route.meta?.title) {
     tabsStore.addTabFromRoute(route)
@@ -41,7 +41,7 @@ onMounted(() => {
     <!-- 主体部分 -->
     <n-layout class="h-screen" content-class="flex flex-col">
       <!-- header -->
-      <n-layout-header bordered class=" px-4 shadow-sm">
+      <n-layout-header bordered class="px-4 shadow-sm">
         <div class="flex flex-row justify-between">
           <div class="flex h-12 shrink-0 items-center">
             <MenuToggle />
@@ -50,15 +50,13 @@ onMounted(() => {
           </div>
           <NavigationBar />
         </div>
-        <div class="flex py-2 h-8 items-center">
+        <div class="flex h-8 items-center py-2">
           <TagNavigation />
         </div>
       </n-layout-header>
       <!-- main 内容 -->
       <n-layout-content class="flex-1">
-        <n-scrollbar class="h-full">
-          <AppMain />
-        </n-scrollbar>
+        <AppMain />
       </n-layout-content>
 
       <!-- footer -->

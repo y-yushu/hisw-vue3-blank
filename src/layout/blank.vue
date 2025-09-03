@@ -1,9 +1,7 @@
-<script setup lang="ts">
-defineOptions({
-  name: 'BlankLayout'
-})
-</script>
-
 <template>
-  <router-view />
+  <div class="h-full w-full">
+    <router-view v-slot="{ Component }">
+      <component :is="Component" />
+    </router-view>
+  </div>
 </template>
