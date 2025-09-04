@@ -81,8 +81,8 @@ getCode()
       <n-form-item path="username" class="mb-4">
         <n-input v-model:value="loginForm.username" placeholder="账号" class="h-[38px]">
           <template #prefix>
-            <div class="ml-2 flex items-center text-gray-400">
-              <span>1</span>
+            <div class="mr-2 flex items-center text-gray-400">
+              <Icon icon="mingcute:user-5-line" width="18" height="18" />
             </div>
           </template>
         </n-input>
@@ -92,8 +92,8 @@ getCode()
       <n-form-item path="password" class="mb-4">
         <n-input v-model:value="loginForm.password" type="password" placeholder="密码" @keyup.enter="handleLogin" class="h-[38px]">
           <template #prefix>
-            <div class="ml-2 flex items-center text-gray-400">
-              <span>2</span>
+            <div class="mr-2 flex items-center text-gray-400">
+              <Icon icon="mdi:password-outline" width="18" height="18" />
             </div>
           </template>
         </n-input>
@@ -104,8 +104,8 @@ getCode()
         <div class="flex space-x-2">
           <n-input v-model:value="loginForm.code" placeholder="验证码" @keyup.enter="handleLogin" class="h-[38px]" style="width: 63%">
             <template #prefix>
-              <div class="ml-2 flex items-center text-gray-400">
-                <span>3</span>
+              <div class="mr-2 flex items-center text-gray-400">
+                <Icon icon="tdesign:verify" width="18" height="18" />
               </div>
             </template>
           </n-input>
