@@ -84,12 +84,18 @@ const handleTabClose = (e: Event, tab: any) => {
     return
   }
 
+  // 记录关闭前是否是当前激活页签
+  const isCurrentTab = tab.name === activeTab.value
+
+  // 移除页签（这会自动更新activeTab到前一个页签）
   tabsStore.removeTab(tab.name)
 
+  console.log(tabsStore.getCurrentTab.path)
   // 如果关闭的是当前页签，需要跳转到新的当前页签
-  if (tab.name === activeTab.value && tabsStore.getCurrentTab) {
+  if (isCurrentTab && tabsStore.getCurrentTab) {
     updateBreadcrumbByPath(tabsStore.getCurrentTab.path)
     appStore.setCurrentMenuPath(tabsStore.getCurrentTab.path)
+
     router.push(tabsStore.getCurrentTab.path)
   }
 }
@@ -121,8 +127,14 @@ const handleDropdownSelect = (key: string) => {
       if (currentTab.affix) {
         message.warning('固定页签不能关闭')
       } else {
+        // 记录关闭前是否是当前激活页签
+        const isCurrentActiveTab = contextMenuTab.value === activeTab.value
+        
+        // 移除页签（这会自动更新activeTab到前一个页签）
         tabsStore.removeTab(contextMenuTab.value)
-        if (contextMenuTab.value === activeTab.value && tabsStore.getCurrentTab) {
+        
+        // 如果关闭的是当前页签，需要跳转到新的当前页签
+        if (isCurrentActiveTab && tabsStore.getCurrentTab) {
           updateBreadcrumbByPath(tabsStore.getCurrentTab.path)
           appStore.setCurrentMenuPath(tabsStore.getCurrentTab.path)
           router.push(tabsStore.getCurrentTab.path)

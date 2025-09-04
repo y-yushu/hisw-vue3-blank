@@ -67,8 +67,8 @@ export const useTabsStore = defineStore('tabs', {
       // 如果关闭的是当前激活页签，需要切换到其他页签
       if (this.activeTab === name) {
         if (this.tabsList.length > 1) {
-          // 优先切换到右侧页签，如果没有则切换到左侧
-          const nextTab = this.tabsList[tabIndex + 1] || this.tabsList[tabIndex - 1]
+          // 优先切换到左侧页签（前一个），如果没有则切换到右侧
+          const nextTab = this.tabsList[tabIndex - 1] || this.tabsList[tabIndex + 1]
           this.activeTab = nextTab.name
         } else {
           this.activeTab = ''
