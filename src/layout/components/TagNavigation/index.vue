@@ -78,14 +78,14 @@ const handleTabClick = (tab: any) => {
 // 页签关闭处理
 const handleTabClose = (e: Event, tab: any) => {
   e.stopPropagation()
-  
+
   if (tab.affix) {
     message.warning('固定页签不能关闭')
     return
   }
-  
+
   tabsStore.removeTab(tab.name)
-  
+
   // 如果关闭的是当前页签，需要跳转到新的当前页签
   if (tab.name === activeTab.value && tabsStore.getCurrentTab) {
     updateBreadcrumbByPath(tabsStore.getCurrentTab.path)
@@ -153,7 +153,7 @@ const handleDropdownSelect = (key: string) => {
       }
       break
   }
-  
+
   dropdownShow.value = false
 }
 
@@ -168,8 +168,8 @@ const scrollToActiveTab = async () => {
   if (scrollbarRef.value) {
     const activeTabElement = document.querySelector('.tag-item.active')
     if (activeTabElement) {
-      activeTabElement.scrollIntoView({ 
-        behavior: 'smooth', 
+      activeTabElement.scrollIntoView({
+        behavior: 'smooth',
         block: 'nearest',
         inline: 'center'
       })
@@ -178,18 +178,25 @@ const scrollToActiveTab = async () => {
 }
 
 // 监听路由变化，同步页签状态
-watch(() => route.path, (newPath) => {
-  // 查找对应的页签
-  const tab = tabsList.value.find(tab => tab.path === newPath)
-  if (tab) {
-    tabsStore.setActiveTab(tab.name)
-  }
-}, { immediate: true })
+watch(
+  () => route.path,
+  newPath => {
+    // 查找对应的页签
+    const tab = tabsList.value.find(tab => tab.path === newPath)
+    if (tab) {
+      tabsStore.setActiveTab(tab.name)
+    }
+  },
+  { immediate: true }
+)
 
 // 监听激活页签变化，自动滚动到激活页签
-watch(() => activeTab.value, () => {
-  scrollToActiveTab()
-})
+watch(
+  () => activeTab.value,
+  () => {
+    scrollToActiveTab()
+  }
+)
 
 onMounted(() => {
   // 初始化时滚动到激活页签
@@ -199,8 +206,8 @@ onMounted(() => {
 
 <template>
   <div class="tag-navigation" @click="handleClickOutside">
-    <NScrollbar ref="scrollbarRef" class="w-full" :x-scrollable="true" style="max-width: 100%;">
-      <div class="flex gap-1 px-2 pb-3 min-w-max" style="width: max-content;">
+    <NScrollbar ref="scrollbarRef" class="w-full" :x-scrollable="true" style="max-width: 100%">
+      <div class="flex min-w-max gap-1 px-2 pb-3" style="width: max-content">
         <NTag
           v-for="tab in tabsList"
           :key="tab.name"
@@ -213,11 +220,7 @@ onMounted(() => {
           size="small"
         >
           <div class="flex items-center gap-1">
-            <SvgIcon 
-              v-if="tab.icon" 
-              :name="tab.icon" 
-              size="12px" 
-            />
+            <SvgIcon v-if="tab.icon" :name="tab.icon" size="12px" />
             <span>{{ tab.title }}</span>
           </div>
         </NTag>

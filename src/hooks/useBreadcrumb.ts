@@ -97,18 +97,14 @@ export function useBreadcrumb() {
   // 根据路径更新面包屑
   const updateBreadcrumbByPath = (path: string) => {
     // 根据路径查找对应的路由配置
-    const findRouteByPath = (
-      routes: AppRouteRecordRaw[],
-      targetPath: string,
-      parentPath = ''
-    ): AppRouteRecordRaw | null => {
+    const findRouteByPath = (routes: AppRouteRecordRaw[], targetPath: string, parentPath = ''): AppRouteRecordRaw | null => {
       for (const route of routes) {
         const fullPath = parentPath + (route.path.startsWith('/') ? route.path : '/' + route.path)
-        
+
         if (fullPath === targetPath) {
           return { ...route, path: fullPath }
         }
-        
+
         if (route.children) {
           const found = findRouteByPath(route.children, targetPath, fullPath)
           if (found) return found

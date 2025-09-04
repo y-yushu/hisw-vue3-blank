@@ -36,7 +36,7 @@ const breadcrumbItems = computed(() => {
 // 监听路由变化，自动更新面包屑
 watch(
   () => route.path,
-  (newPath) => {
+  newPath => {
     updateBreadcrumbByPath(newPath)
   },
   { immediate: true }

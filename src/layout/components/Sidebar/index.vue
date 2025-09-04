@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import Logo from './logo.vue'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'

@@ -1,6 +1,23 @@
 <script setup lang="ts">
 import { ref, reactive, watch, nextTick } from 'vue'
-import { NModal, NCard, NForm, NFormItem, NGrid, NFormItemGi, NButton, NSpace, NInput, NSelect, NSwitch, NDatePicker, NInputNumber, NRadioGroup, NRadio, NCheckboxGroup, NCheckbox, useMessage } from 'naive-ui'
+import {
+  NModal,
+  NForm,
+  NGrid,
+  NFormItemGi,
+  NButton,
+  NSpace,
+  NInput,
+  NSelect,
+  NSwitch,
+  NDatePicker,
+  NInputNumber,
+  NRadioGroup,
+  NRadio,
+  NCheckboxGroup,
+  NCheckbox,
+  useMessage
+} from 'naive-ui'
 
 // 字段类型定义
 export interface FormFieldConfig {
@@ -67,32 +84,35 @@ const formRules = computed(() => {
 })
 
 // 监听外部传入的表单数据
-watch(() => props.formData, (newData) => {
-  if (newData) {
-    Object.assign(internalFormData, newData)
-  }
-}, { immediate: true, deep: true })
+watch(
+  () => props.formData,
+  newData => {
+    if (newData) {
+      Object.assign(internalFormData, newData)
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 // 监听对话框显示状态
-watch(() => props.show, (show) => {
-  if (show) {
-    nextTick(() => {
-      // 初始化表单数据
-      initFormData()
-    })
+watch(
+  () => props.show,
+  show => {
+    if (show) {
+      nextTick(() => {
+        // 初始化表单数据
+        initFormData()
+      })
+    }
   }
-})
+)
 
 // 初始化表单数据
 const initFormData = () => {
   props.fields.forEach(field => {
     if (!(field.key in internalFormData)) {
-      internalFormData[field.key] = field.defaultValue ?? (
-        field.type === 'switch' ? false :
-        field.type === 'number' ? 0 :
-        field.type === 'checkbox' ? [] :
-        ''
-      )
+      internalFormData[field.key] =
+        field.defaultValue ?? (field.type === 'switch' ? false : field.type === 'number' ? 0 : field.type === 'checkbox' ? [] : '')
     }
   })
 }
@@ -114,7 +134,7 @@ const renderFormField = (field: FormFieldConfig) => {
         },
         ...commonProps
       })
-    
+
     case 'textarea':
       return h(NInput, {
         type: 'textarea',
@@ -124,7 +144,7 @@ const renderFormField = (field: FormFieldConfig) => {
         },
         ...commonProps
       })
-    
+
     case 'select':
       return h(NSelect, {
         value: internalFormData[field.key],
@@ -134,7 +154,7 @@ const renderFormField = (field: FormFieldConfig) => {
         options: field.options || [],
         ...commonProps
       })
-    
+
     case 'switch':
       return h(NSwitch, {
         value: internalFormData[field.key],
@@ -143,7 +163,7 @@ const renderFormField = (field: FormFieldConfig) => {
         },
         ...commonProps
       })
-    
+
     case 'date':
       return h(NDatePicker, {
         value: internalFormData[field.key],
@@ -153,7 +173,7 @@ const renderFormField = (field: FormFieldConfig) => {
         type: 'date',
         ...commonProps
       })
-    
+
     case 'number':
       return h(NInputNumber, {
         value: internalFormData[field.key],
@@ -162,33 +182,37 @@ const renderFormField = (field: FormFieldConfig) => {
         },
         ...commonProps
       })
-    
+
     case 'radio':
-      return h(NRadioGroup, {
-        value: internalFormData[field.key],
-        'onUpdate:value': (value: any) => {
-          internalFormData[field.key] = value
+      return h(
+        NRadioGroup,
+        {
+          value: internalFormData[field.key],
+          'onUpdate:value': (value: any) => {
+            internalFormData[field.key] = value
+          },
+          ...commonProps
         },
-        ...commonProps
-      }, {
-        default: () => field.options?.map(option => 
-          h(NRadio, { value: option.value }, { default: () => option.label })
-        )
-      })
-    
+        {
+          default: () => field.options?.map(option => h(NRadio, { value: option.value }, { default: () => option.label }))
+        }
+      )
+
     case 'checkbox':
-      return h(NCheckboxGroup, {
-        value: internalFormData[field.key],
-        'onUpdate:value': (value: any[]) => {
-          internalFormData[field.key] = value
+      return h(
+        NCheckboxGroup,
+        {
+          value: internalFormData[field.key],
+          'onUpdate:value': (value: any[]) => {
+            internalFormData[field.key] = value
+          },
+          ...commonProps
         },
-        ...commonProps
-      }, {
-        default: () => field.options?.map(option => 
-          h(NCheckbox, { value: option.value }, { default: () => option.label })
-        )
-      })
-    
+        {
+          default: () => field.options?.map(option => h(NCheckbox, { value: option.value }, { default: () => option.label }))
+        }
+      )
+
     default:
       return h(NInput, {
         value: internalFormData[field.key],
@@ -206,6 +230,7 @@ const handleConfirm = async () => {
     await formRef.value?.validate()
     emit('confirm', { ...internalFormData })
   } catch (error) {
+    console.log(error)
     message.error('请检查表单输入')
   }
 }
@@ -223,41 +248,19 @@ const handleClose = () => {
 </script>
 
 <template>
-  <NModal
-    :show="show"
-    :mask-closable="false"
-    preset="card"
-    :title="title"
-    :style="{ width: `${width}px` }"
-    @close="handleClose"
-  >
-    <NForm
-      ref="formRef"
-      :model="internalFormData"
-      :rules="formRules"
-      label-placement="left"
-      label-width="auto"
-      size="medium"
-    >
+  <NModal :show="show" :mask-closable="false" preset="card" :title="title" :style="{ width: `${width}px` }" @close="handleClose">
+    <NForm ref="formRef" :model="internalFormData" :rules="formRules" label-placement="left" label-width="auto" size="medium">
       <NGrid :cols="cols" :x-gap="12" :y-gap="8">
-        <NFormItemGi
-          v-for="field in fields"
-          :key="field.key"
-          :label="field.label"
-          :path="field.key"
-          :span="field.span || 1"
-        >
+        <NFormItemGi v-for="field in fields" :key="field.key" :label="field.label" :path="field.key" :span="field.span || 1">
           <component :is="renderFormField(field)" />
         </NFormItemGi>
       </NGrid>
     </NForm>
-    
+
     <template #footer>
       <NSpace justify="end">
         <NButton @click="handleCancel">取消</NButton>
-        <NButton type="primary" :loading="loading" @click="handleConfirm">
-          确定
-        </NButton>
+        <NButton type="primary" :loading="loading" @click="handleConfirm"> 确定 </NButton>
       </NSpace>
     </template>
   </NModal>
