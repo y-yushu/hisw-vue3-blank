@@ -44,7 +44,7 @@ Vue 3 + TypeScript + Vite + tailwindcss + naive-ui + pinia
 pnpm run lint
 ```
 
-- 错误修复
+- 自动错误修复
 
 ```shell
 pnpm run lint:fix

@@ -5,6 +5,9 @@ import type { BreadcrumbItem } from '@/types/breadcrumb'
 import cache from '@/utils/cache'
 
 export type AsideTheme = 'light' | 'dark'
+function isAsideTheme(value: string): value is AsideTheme {
+  return value === 'light' || value === 'dark'
+}
 export type Theme = AsideTheme | 'auto'
 export type ColorType = 'primary' | 'success' | 'info' | 'warning' | 'error'
 // 定义状态的类型
@@ -64,12 +67,15 @@ export const useAppStore = defineStore('app', {
     // 改变主题
     changeTheme(theme: Theme) {
       this.theme = theme
-      this.toggleAsideTheme(this.theme)
+      if (isAsideTheme(this.theme)) {
+        this.toggleAsideTheme(this.theme)
+      }
       this.saveTheme()
     },
     // 切换侧边栏主题
-    toggleAsideTheme(theme: Theme) {
+    toggleAsideTheme(theme: AsideTheme) {
       this.asideTheme = theme as AsideTheme
+      this.saveTheme()
     },
     setCurrentMenuPath(path: string) {
       this.currentMenuPath = path
