@@ -73,8 +73,10 @@ export function useBreadcrumb() {
       const breadcrumbs = generateBreadcrumbs(route)
       appStore.setBreadcrumbs(breadcrumbs)
 
-      // 添加页签
-      tabsStore.addTabFromRoute(route)
+      // 只有非首页才添加页签（首页已经在初始化时添加了）
+      if (route.path !== '/index' && route.path !== '/') {
+        tabsStore.addTabFromRoute(route)
+      }
 
       // 跳转到对应路由
       console.log(route.path)

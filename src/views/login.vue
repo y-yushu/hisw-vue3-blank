@@ -1,13 +1,38 @@
 <script setup lang="ts">
 import type { NForm } from 'naive-ui'
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { getCodeImg, type LoginRequest } from '@/api/login'
 import { useUserStore } from '@/store/user'
+import { useAppStore } from '@/store/app'
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const appStore = useAppStore()
 const router = useRouter()
 const message = useMessage()
+
+// 计算主题相关的样式类
+const isDark = computed(() => appStore.theme === 'dark')
+const formCardClass = computed(() => 
+  isDark.value 
+    ? 'w-full max-w-md rounded-lg bg-gray-800 shadow-md border border-gray-700' 
+    : 'w-full max-w-md rounded-lg bg-white shadow-md'
+)
+const titleClass = computed(() => 
+  isDark.value 
+    ? 'mb-8 text-center text-xl font-medium text-gray-100' 
+    : 'mb-8 text-center text-xl font-medium text-gray-700'
+)
+const checkboxTextClass = computed(() => 
+  isDark.value 
+    ? 'text-sm text-gray-300' 
+    : 'text-sm text-gray-700'
+)
+const copyrightClass = computed(() => 
+  isDark.value 
+    ? 'fixed bottom-0 w-full py-2 text-center text-xs text-gray-300' 
+    : 'fixed bottom-0 w-full py-2 text-center text-xs text-white'
+)
 
 // 表单模型
 const loginForm = reactive<LoginRequest>({
@@ -66,16 +91,16 @@ getCode()
 </script>
 
 <template>
-  <div class="login-back flex min-h-screen flex-col items-center justify-center bg-center">
+  <div class="login-back flex min-h-screen flex-col items-center justify-center bg-center" :class="{ 'dark-overlay': isDark }">
     <!-- 登录表单卡片 -->
     <n-form
       :model="loginForm"
       :rules="loginRules"
       ref="loginFormRef"
-      class="w-full max-w-md rounded-lg bg-white shadow-md"
+      :class="formCardClass"
       style="width: 400px; padding: 25px 25px 5px 25px"
     >
-      <h3 class="mb-8 text-center text-xl font-medium text-gray-700">浦东安监系统</h3>
+      <h3 :class="titleClass">浦东安监系统</h3>
 
       <!-- 用户名 -->
       <n-form-item path="username" class="mb-4">
@@ -115,7 +140,7 @@ getCode()
 
       <!-- 记住密码 -->
       <n-checkbox v-model:checked="loginForm.rememberMe" class="mb-6">
-        <span class="text-sm text-gray-700">记住密码</span>
+        <span :class="checkboxTextClass">记住密码</span>
       </n-checkbox>
 
       <!-- 登录按钮 -->
@@ -133,7 +158,7 @@ getCode()
     </n-form>
 
     <!-- 底部版权 -->
-    <div class="fixed bottom-0 w-full py-2 text-center text-xs text-white">
+    <div :class="copyrightClass">
       <span>Copyright © 2018-{{ new Date().getFullYear() }} hisw.vip All Rights Reserved.</span>
     </div>
   </div>
