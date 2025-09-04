@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { NButton, NInput, NSelect, NDataTable, NPagination, NTree, NSwitch, NSpace, NCard, NForm, NFormItem, NGrid, NFormItemGi, useMessage } from 'naive-ui'
-import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
+import { NButton, NSwitch } from 'naive-ui'
 import FormDialog, { type FormFieldConfig } from '@/components/FormDialog/index.vue'
+import type { TableColumn } from 'naive-ui/es/data-table/src/interface'
 
 // 消息提示
 const message = useMessage()
@@ -54,8 +54,17 @@ const deptTreeData = ref([
   }
 ])
 
+interface User {
+  userId: number
+  userName: string
+  nickName: string
+  deptName: string
+  phonenumber: string
+  status: string
+  createTime: string
+}
 // 用户列表数据
-const userList = ref([
+const userList = ref<User[]>([
   {
     userId: 1,
     userName: 'admin',
@@ -77,7 +86,7 @@ const userList = ref([
 ])
 
 // 表格列定义
-const columns = [
+const columns: TableColumn[] = [
   {
     title: '用户编号',
     key: 'userId',
@@ -130,24 +139,36 @@ const columns = [
     align: 'center',
     render: (row: any) => {
       return h('div', { class: 'flex gap-2 justify-center' }, [
-        h(NButton, {
-          size: 'small',
-          type: 'primary',
-          text: true,
-          onClick: () => handleEdit(row)
-        }, { default: () => '修改' }),
-        h(NButton, {
-          size: 'small',
-          type: 'error',
-          text: true,
-          onClick: () => handleDelete(row)
-        }, { default: () => '删除' }),
-        h(NButton, {
-          size: 'small',
-          type: 'info',
-          text: true,
-          onClick: () => handleResetPwd(row)
-        }, { default: () => '重置' })
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'primary',
+            text: true,
+            onClick: () => handleEdit(row)
+          },
+          { default: () => '修改' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'error',
+            text: true,
+            onClick: () => handleDelete(row)
+          },
+          { default: () => '删除' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            text: true,
+            onClick: () => handleResetPwd(row)
+          },
+          { default: () => '重置' }
+        )
       ])
     }
   }
@@ -210,9 +231,7 @@ const userFormFields: FormFieldConfig[] = [
     type: 'input',
     placeholder: '请输入手机号码',
     span: 1,
-    rules: [
-      { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
-    ]
+    rules: [{ pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }]
   },
   {
     key: 'email',
@@ -220,9 +239,7 @@ const userFormFields: FormFieldConfig[] = [
     type: 'input',
     placeholder: '请输入邮箱',
     span: 1,
-    rules: [
-      { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-    ]
+    rules: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]
   },
   {
     key: 'sex',
@@ -358,7 +375,7 @@ const handleDialogConfirm = async (formData: Record<string, any>) => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     if (currentUserData.value.userId) {
       // 编辑用户
       const index = userList.value.findIndex(user => user.userId === currentUserData.value.userId)
@@ -368,18 +385,24 @@ const handleDialogConfirm = async (formData: Record<string, any>) => {
       message.success('修改用户成功')
     } else {
       // 新增用户
-      const newUser = {
+      const newUser: User = {
         userId: userList.value.length + 1,
         ...formData,
-        createTime: new Date().toLocaleString('zh-CN')
+        createTime: new Date().toLocaleString('zh-CN'),
+        userName: '',
+        nickName: '',
+        deptName: '',
+        phonenumber: '',
+        status: ''
       }
       userList.value.push(newUser)
       pagination.itemCount = userList.value.length
       message.success('新增用户成功')
     }
-    
+
     dialogVisible.value = false
   } catch (error) {
+    console.error('操作失败', error)
     message.error('操作失败')
   } finally {
     dialogLoading.value = false
@@ -398,7 +421,7 @@ onMounted(() => {
 
 <template>
   <div class="user-management p-4">
-    <div class="flex gap-4 h-full">
+    <div class="flex h-full gap-4">
       <!-- 左侧部门树 -->
       <div class="w-64 flex-shrink-0">
         <NCard title="部门" class="h-full">
@@ -414,56 +437,29 @@ onMounted(() => {
       </div>
 
       <!-- 右侧主要内容 -->
-      <div class="flex-1 flex flex-col">
+      <div class="flex flex-1 flex-col">
         <!-- 搜索区域 -->
         <NCard class="mb-4">
-          <NForm
-            ref="searchFormRef"
-            :model="searchForm"
-            label-placement="left"
-            label-width="auto"
-            size="small"
-          >
+          <NForm ref="searchFormRef" :model="searchForm" label-placement="left" label-width="auto" size="small">
             <NGrid :cols="4" :x-gap="12">
               <NFormItemGi label="用户名称">
-                <NInput
-                  v-model:value="searchForm.userName"
-                  placeholder="请输入用户名称"
-                  clearable
-                />
+                <NInput v-model:value="searchForm.userName" placeholder="请输入用户名称" clearable />
               </NFormItemGi>
               <NFormItemGi label="用户昵称">
-                <NInput
-                  v-model:value="searchForm.userNickName"
-                  placeholder="请输入用户昵称"
-                  clearable
-                />
+                <NInput v-model:value="searchForm.userNickName" placeholder="请输入用户昵称" clearable />
               </NFormItemGi>
               <NFormItemGi label="手机号码">
-                <NInput
-                  v-model:value="searchForm.phonenumber"
-                  placeholder="请输入手机号码"
-                  clearable
-                />
+                <NInput v-model:value="searchForm.phonenumber" placeholder="请输入手机号码" clearable />
               </NFormItemGi>
               <NFormItemGi label="状态">
-                <NSelect
-                  v-model:value="searchForm.status"
-                  :options="statusOptions"
-                  placeholder="用户状态"
-                  clearable
-                />
+                <NSelect v-model:value="searchForm.status" :options="statusOptions" placeholder="用户状态" clearable />
               </NFormItemGi>
             </NGrid>
-            
-            <div class="flex justify-start items-center mt-4">
+
+            <div class="mt-4 flex items-center justify-start">
               <NSpace>
-                <NButton type="primary" @click="handleSearch">
-                  搜索
-                </NButton>
-                <NButton @click="handleReset">
-                  重置
-                </NButton>
+                <NButton type="primary" @click="handleSearch"> 搜索 </NButton>
+                <NButton @click="handleReset"> 重置 </NButton>
               </NSpace>
             </div>
           </NForm>
@@ -471,44 +467,24 @@ onMounted(() => {
 
         <!-- 操作工具栏 -->
         <NCard class="mb-4">
-          <div class="flex justify-between items-center">
+          <div class="flex items-center justify-between">
             <NSpace>
-              <NButton type="primary" @click="handleAdd">
-                新增
-              </NButton>
-              <NButton type="info" @click="handleEdit">
-                修改
-              </NButton>
-              <NButton type="error" @click="handleBatchDelete">
-                删除
-              </NButton>
-              <NButton type="warning" @click="handleImport">
-                导入
-              </NButton>
-              <NButton type="success" @click="handleExport">
-                导出
-              </NButton>
+              <NButton type="primary" @click="handleAdd"> 新增 </NButton>
+              <NButton type="info" @click="handleEdit"> 修改 </NButton>
+              <NButton type="error" @click="handleBatchDelete"> 删除 </NButton>
+              <NButton type="warning" @click="handleImport"> 导入 </NButton>
+              <NButton type="success" @click="handleExport"> 导出 </NButton>
             </NSpace>
           </div>
         </NCard>
 
         <!-- 数据表格 -->
         <NCard class="flex-1">
-          <NDataTable
-            :columns="columns"
-            :data="userList"
-            :pagination="false"
-            :bordered="true"
-            :single-line="false"
-            size="small"
-            class="user-table"
-          />
-          
+          <NDataTable :columns="columns" :data="userList" :pagination="false" :bordered="true" :single-line="false" size="small" class="user-table" />
+
           <!-- 分页 -->
-          <div class="flex justify-between items-center mt-4 pt-4">
-            <div class="text-sm text-gray-500">
-              共 {{ pagination.itemCount }} 条
-            </div>
+          <div class="mt-4 flex items-center justify-between pt-4">
+            <div class="text-sm text-gray-500">共 {{ pagination.itemCount }} 条</div>
             <NPagination
               v-model:page="pagination.page"
               v-model:page-size="pagination.pageSize"
@@ -519,9 +495,7 @@ onMounted(() => {
               @update:page="handlePageChange"
               @update:page-size="handlePageSizeChange"
             >
-              <template #prefix="{ itemCount }">
-                {{ pagination.pageSize }} 条/页
-              </template>
+              <template #prefix> {{ pagination.pageSize }} 条/页 </template>
             </NPagination>
           </div>
         </NCard>
@@ -552,16 +526,15 @@ onMounted(() => {
   :deep(.n-tree-node-content) {
     padding: 4px 8px;
     border-radius: 4px;
-    
+
     &:hover {
       background-color: #f5f5f5;
     }
   }
-  
+
   :deep(.n-tree-node-content--selected) {
     background-color: #e6f7ff;
     color: #1890ff;
   }
 }
-
 </style>

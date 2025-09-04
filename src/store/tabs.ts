@@ -24,12 +24,12 @@ export const useTabsStore = defineStore('tabs', {
 
   getters: {
     // 获取当前激活的页签
-    getCurrentTab: (state) => {
+    getCurrentTab: state => {
       return state.tabsList.find(tab => tab.name === state.activeTab)
     },
-    
+
     // 获取可关闭的页签
-    getClosableTabs: (state) => {
+    getClosableTabs: state => {
       return state.tabsList.filter(tab => tab.closable !== false && !tab.affix)
     }
   },
@@ -39,7 +39,7 @@ export const useTabsStore = defineStore('tabs', {
     addTab(tab: TabItem) {
       // 检查页签是否已存在
       const existingTab = this.tabsList.find(item => item.name === tab.name)
-      
+
       if (!existingTab) {
         // 设置默认值
         const newTab: TabItem = {
@@ -49,7 +49,7 @@ export const useTabsStore = defineStore('tabs', {
         }
         this.tabsList.push(newTab)
       }
-      
+
       // 设置为当前激活页签
       this.activeTab = tab.name
     },
@@ -60,7 +60,7 @@ export const useTabsStore = defineStore('tabs', {
       if (tabIndex === -1) return
 
       const tab = this.tabsList[tabIndex]
-      
+
       // 固定页签不能关闭
       if (tab.affix) return
 
@@ -89,7 +89,7 @@ export const useTabsStore = defineStore('tabs', {
     closeAllTabs() {
       // 只保留固定页签
       this.tabsList = this.tabsList.filter(tab => tab.affix)
-      
+
       // 如果还有固定页签，激活第一个
       if (this.tabsList.length > 0) {
         this.activeTab = this.tabsList[0].name
@@ -104,9 +104,7 @@ export const useTabsStore = defineStore('tabs', {
       if (targetIndex === -1) return
 
       // 保留目标页签及其右侧页签，以及所有固定页签
-      this.tabsList = this.tabsList.filter((tab, index) => 
-        index >= targetIndex || tab.affix
-      )
+      this.tabsList = this.tabsList.filter((tab, index) => index >= targetIndex || tab.affix)
     },
 
     // 关闭右侧页签
@@ -115,9 +113,7 @@ export const useTabsStore = defineStore('tabs', {
       if (targetIndex === -1) return
 
       // 保留目标页签及其左侧页签，以及所有固定页签
-      this.tabsList = this.tabsList.filter((tab, index) => 
-        index <= targetIndex || tab.affix
-      )
+      this.tabsList = this.tabsList.filter((tab, index) => index <= targetIndex || tab.affix)
     },
 
     // 设置激活页签
@@ -137,7 +133,7 @@ export const useTabsStore = defineStore('tabs', {
         affix: true, // 首页固定，不可关闭
         closable: false
       }
-      
+
       this.addTab(homeTab)
     },
 
@@ -148,7 +144,7 @@ export const useTabsStore = defineStore('tabs', {
       if (!name) {
         name = 'tab_' + Date.now()
       }
-      
+
       const tab: TabItem = {
         name,
         title: route.meta?.title || '未命名页面',
@@ -157,7 +153,7 @@ export const useTabsStore = defineStore('tabs', {
         affix: route.meta?.affix || false,
         closable: !route.meta?.affix
       }
-      
+
       this.addTab(tab)
     }
   }
