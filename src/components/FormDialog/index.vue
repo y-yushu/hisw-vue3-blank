@@ -2,9 +2,7 @@
 import { ref, reactive, watch, nextTick } from 'vue'
 import {
   NModal,
-  // NCard,
   NForm,
-  // NFormItem,
   NGrid,
   NFormItemGi,
   NButton,
@@ -232,7 +230,7 @@ const handleConfirm = async () => {
     await formRef.value?.validate()
     emit('confirm', { ...internalFormData })
   } catch (error) {
-    console.error('[请检查表单输入]', error)
+    console.log(error)
     message.error('请检查表单输入')
   }
 }
