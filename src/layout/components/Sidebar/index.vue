@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import Logo from './logo.vue'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
@@ -132,6 +132,9 @@ function handleUpdateValue(value: string) {
 function handleUpdateExpandedKeys(keys: Array<string | number>) {
   expandedKeys.value = keys.map(key => Number(key))
 }
+
+// 是否启动深色模式
+const isInverted = computed(() => appStore.asideTheme === 'dark')
 </script>
 
 <template>
@@ -139,6 +142,7 @@ function handleUpdateExpandedKeys(keys: Array<string | number>) {
     <Logo />
     <n-menu
       class="cu-custon-menu"
+      :inverted="isInverted"
       :collapsed="appStore.opened"
       :indent="16"
       :collapsed-width="64"
@@ -146,6 +150,7 @@ function handleUpdateExpandedKeys(keys: Array<string | number>) {
       :options="backendMenus"
       :value="selectedKey"
       :expanded-keys="expandedKeys"
+      accordion
       @update:value="handleUpdateValue"
       @update:expanded-keys="handleUpdateExpandedKeys"
     />

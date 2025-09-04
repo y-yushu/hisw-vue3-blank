@@ -9,30 +9,20 @@ defineOptions({
 const route = useRoute()
 
 // 当前组件 name
-const componentName = computed(() => route.matched[route.matched.length - 1]?.components?.default?.name)
+const componentName = computed(() => route.matched[route.matched.length - 1]?.components?.default?.name || '')
 
-// 是否需要缓存
-const shouldCache = computed(() => route.meta?.noCache === false)
+// 是否需要缓存（修改逻辑：默认缓存，除非明确设置 noCache 为 true）
+const shouldCache = computed(() => route.meta?.noCache !== true)
+const cacheList = computed(() => {
+  const name = componentName.value
+  return shouldCache.value && name ? [name] : []
+})
 </script>
 
 <template>
   <router-view v-slot="{ Component }">
-    <transition name="fade" mode="out-in">
-      <keep-alive :include="shouldCache ? componentName : ''">
-        <component :is="Component" :key="$route.fullPath" />
-      </keep-alive>
-    </transition>
+    <keep-alive :include="cacheList">
+      <component :is="Component" :key="$route.fullPath" />
+    </keep-alive>
   </router-view>
 </template>
-
-<style scoped>
-/* .fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-} */
-</style>

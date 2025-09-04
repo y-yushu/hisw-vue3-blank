@@ -4,14 +4,15 @@ import { pinia } from './index'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 import cache from '@/utils/cache'
 
-export type Theme = 'light' | 'dark' | 'auto'
+export type AsideTheme = 'light' | 'dark'
+export type Theme = AsideTheme | 'auto'
 export type ColorType = 'primary' | 'success' | 'info' | 'warning' | 'error'
 // 定义状态的类型
 interface AppState {
   opened: boolean
   breadcrumbs: BreadcrumbItem[]
   theme: Theme
-  asideTheme: Theme // 侧边栏颜色
+  asideTheme: AsideTheme // 侧边栏颜色
   currentMenuPath: string // 当前选中的菜单路径
   // 五个主题色
   primaryColor: string
@@ -22,7 +23,6 @@ interface AppState {
 }
 
 const themeData = cache.local.getJSON('theme-settings') as AppState
-console.log('🚀 ~ themeData:', themeData)
 
 export const useAppStore = defineStore('app', {
   state: (): AppState => ({
@@ -30,7 +30,7 @@ export const useAppStore = defineStore('app', {
     breadcrumbs: [],
     currentMenuPath: '',
     theme: (themeData?.theme || config.theme) as Theme,
-    asideTheme: (themeData?.asideTheme || config.asideTheme) as Theme,
+    asideTheme: (themeData?.asideTheme || config.asideTheme) as AsideTheme,
     primaryColor: themeData?.primaryColor || config.primaryColor,
     successColor: themeData?.successColor || config.successColor,
     infoColor: themeData?.infoColor || config.infoColor,
@@ -69,7 +69,7 @@ export const useAppStore = defineStore('app', {
     },
     // 切换侧边栏主题
     toggleAsideTheme(theme: Theme) {
-      this.asideTheme = theme
+      this.asideTheme = theme as AsideTheme
     },
     setCurrentMenuPath(path: string) {
       this.currentMenuPath = path
