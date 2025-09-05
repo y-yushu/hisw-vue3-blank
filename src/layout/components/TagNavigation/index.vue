@@ -129,10 +129,8 @@ const handleDropdownSelect = (key: string) => {
       } else {
         // 记录关闭前是否是当前激活页签
         const isCurrentActiveTab = contextMenuTab.value === activeTab.value
-        
         // 移除页签（这会自动更新activeTab到前一个页签）
         tabsStore.removeTab(contextMenuTab.value)
-        
         // 如果关闭的是当前页签，需要跳转到新的当前页签
         if (isCurrentActiveTab && tabsStore.getCurrentTab) {
           updateBreadcrumbByPath(tabsStore.getCurrentTab.path)
