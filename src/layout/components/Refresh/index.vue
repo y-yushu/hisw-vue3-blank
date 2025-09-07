@@ -12,7 +12,7 @@ const handleRefresh = () => {
 
 <template>
   <div class="ml-2 cursor-pointer">
-    <Icon icon="material-symbols:refresh" width="24" height="24" class="text-black" @click="handleRefresh" />
+    <Icon icon="material-symbols:refresh" width="24" height="24" @click="handleRefresh" />
   </div>
 </template>
 
