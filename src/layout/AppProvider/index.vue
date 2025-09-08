@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { zhCN, dateZhCN } from 'naive-ui'
 import { getPalette } from 'tailwindcss-palette-generator/getPalette'
 import { lightTheme, darkTheme, type GlobalThemeOverrides } from 'naive-ui'
 import { useAppStore } from '@/store/app'
@@ -108,7 +109,12 @@ const currentThemeOverrides = computed(() => {
 </script>
 
 <template>
-  <n-config-provider :theme="themeName === 'light' ? lightTheme : darkTheme" :theme-overrides="currentThemeOverrides">
+  <n-config-provider
+    :theme="themeName === 'light' ? lightTheme : darkTheme"
+    :theme-overrides="currentThemeOverrides"
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+  >
     <n-dialog-provider>
       <n-notification-provider>
         <n-message-provider>

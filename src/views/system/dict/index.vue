@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { usePageTableHook } from '@/hooks/usePageTableHook'
 import { getDictType } from '@/api/system/dict'
-import { NTag, NButton, NSpace, NIcon, type DataTableColumns, useMessage } from 'naive-ui'
+import { NTag, NButton, NSpace, NIcon, type DataTableColumns, useMessage, type PaginationProps } from 'naive-ui'
 import { Icon } from '@iconify/vue'
-import { h, ref, computed } from 'vue'
+import type { FormFieldConfig } from '@/components/FormDialog/index.vue'
 
 interface Query {
   dictName: string
@@ -34,27 +34,30 @@ const statusOptions = [
 const message = useMessage()
 
 // 使用hook获取表格数据
-const { query, handleReset, tableList, getList, pagination, handlePageChange, handlePageSizeChange } = usePageTableHook<Query, TableItem>(getDictType, {
+const {
+  // 检索条件
+  query,
+  handleReset,
+  // 列表
+  tableList,
+  getList,
+  singleCheckedRow, // 单选key
+  checkedRowKeys, // 多选keys
+  handleCheck, // 行选择处理
+  // 分页
+  pagination,
+  handlePageChange,
+  handlePageSizeChange
+} = usePageTableHook<Query, TableItem>(getDictType, {
   dictName: '',
   dictType: '',
   status: '',
   range: null
 })
 
-// 选中行管理
-const checkedRowKeys = ref<(string | number)[]>([])
-const singleCheckedRow = ref<TableItem | null>(null)
-
 // 计算按钮状态
 const canEdit = computed(() => singleCheckedRow.value !== null)
 const canDelete = computed(() => checkedRowKeys.value.length > 0)
-
-// 行选择处理
-const handleCheck = (rowKeys: (string | number)[], rows: TableItem[]) => {
-  checkedRowKeys.value = rowKeys
-  singleCheckedRow.value = rows.length === 1 ? rows[0] : null
-}
-console.log('🚀 ~ handleCheck ~ handleCheck:', handleCheck)
 
 // 定义表格列
 const columns: DataTableColumns<TableItem> = [
@@ -147,28 +150,37 @@ const columns: DataTableColumns<TableItem> = [
     }
   }
 ]
-
-// 处理查询
-const handleQuery = () => {
-  pagination.page = 1
-  getList()
-}
+// 定义分页
+const paginationReactive = reactive<PaginationProps>({
+  page: pagination.page,
+  pageSize: pagination.pageSize,
+  pageCount: pagination.total,
+  pageSizes: [10, 20, 30, 50],
+  showSizePicker: true,
+  onUpdatePage: handlePageChange,
+  onUpdatePageSize: handlePageSizeChange,
+  prefix({ itemCount }) {
+    return `总数：${itemCount}`
+  }
+})
 
 // 处理新增
 const handleAdd = () => {
   message.success('新增字典')
+  openAddForm()
   // 这里可以添加新增字典的逻辑
 }
 
 // 处理编辑
-const handleEdit = (row: TableItem) => {
-  message.info(`编辑字典: ${row.dictName}`)
+const handleEdit = (item: TableItem) => {
+  console.log('🚀 ~ handleEdit ~ item:', item)
   // 这里可以添加编辑字典的逻辑
 }
 
 // 处理编辑
-const handleEdit2 = (row: TableItem | null) => {
-  console.log('🚀 ~ handleEdit2 ~ row:', row)
+const handleEditClick = () => {
+  const item = singleCheckedRow.value
+  if (item) handleEdit(item)
   // 这里可以添加编辑字典的逻辑
 }
 
@@ -178,8 +190,9 @@ const handleDelete = (row: TableItem) => {
   // 这里可以添加删除字典的逻辑
 }
 // 处理删除
-const handleDelete2 = (e: MouseEvent) => {
-  console.log('🚀 ~ handleDelete2 ~ e:', e)
+const handleDeleteClick = () => {
+  const items = checkedRowKeys.value
+  console.log('🚀 ~ handleDeleteClick ~ items:', items)
   // message.warning(`删除字典: ${row.dictName}`)
   // 这里可以添加删除字典的逻辑
 }
@@ -188,6 +201,96 @@ const handleDelete2 = (e: MouseEvent) => {
 const handleExport = () => {
   message.success('导出数据')
   // 这里可以添加导出逻辑
+}
+
+/**
+ * 表单部分
+ */
+// 表单配置
+const formFields: FormFieldConfig[] = [
+  {
+    key: 'dictName',
+    label: '字典名称',
+    type: 'input',
+    placeholder: '请输入字典名称',
+    required: true,
+    span: 2
+  },
+  {
+    key: 'dictType',
+    label: '字典类型',
+    type: 'input',
+    placeholder: '请输入字典类型',
+    required: true,
+    span: 2
+  },
+  {
+    key: 'status',
+    label: '状态',
+    type: 'radio',
+    required: true,
+    options: [
+      { label: '正常', value: '0' },
+      { label: '停用', value: '1' }
+    ],
+    defaultValue: '0',
+    span: 2
+  },
+  {
+    key: 'remark',
+    label: '备注',
+    type: 'textarea',
+    placeholder: '请输入内容',
+    span: 2
+  }
+]
+// 表单显示状态
+const showForm = ref(false)
+// 表单数据
+const formData = reactive({
+  dictName: '',
+  dictType: '',
+  status: '0',
+  remark: ''
+})
+// 加载状态
+const loading = ref(false)
+
+// 打开添加表单
+const openAddForm = () => {
+  // 重置表单数据
+  Object.assign(formData, {
+    dictName: '',
+    dictType: '',
+    status: '0',
+    remark: ''
+  })
+  showForm.value = true
+}
+
+// 提交表单
+const handleConfirm = async (data: Record<string, any>) => {
+  loading.value = true
+  try {
+    // 模拟API调用
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    console.log('提交的数据:', data)
+    message.success('添加成功')
+    showForm.value = false
+    // 这里可以调用你的API来添加字典
+    // await addDictType(data)
+    // 添加成功后刷新列表
+    // getList()
+  } catch (error) {
+    console.error('添加失败:', error)
+    message.error('添加失败')
+  } finally {
+    loading.value = false
+  }
+}
+// 取消操作
+const handleCancel = () => {
+  message.info('已取消')
 }
 </script>
 
@@ -232,7 +335,7 @@ const handleExport = () => {
 
         <!-- 查询和重置按钮 -->
         <div class="ml-4 flex items-center gap-2">
-          <n-button type="primary" @click="handleQuery" size="small">
+          <n-button type="primary" @click="getList" size="small">
             <template #icon>
               <n-icon><Icon icon="mdi:magnify" /></n-icon>
             </template>
@@ -256,19 +359,19 @@ const handleExport = () => {
             </template>
             新增
           </n-button>
-          <n-button type="info" @click="handleEdit2(singleCheckedRow)" size="small" :disabled="!canEdit">
+          <n-button type="info" @click="handleEditClick" size="small" :disabled="!canEdit">
             <template #icon>
               <n-icon><Icon icon="mdi:pencil" /></n-icon>
             </template>
             修改
           </n-button>
-          <n-button type="warning" @click="handleDelete2" size="small" :disabled="!canDelete">
+          <n-button type="error" @click="handleDeleteClick" size="small" :disabled="!canDelete">
             <template #icon>
               <n-icon><Icon icon="mdi:delete" /></n-icon>
             </template>
             删除
           </n-button>
-          <n-button type="error" @click="handleExport" size="small">
+          <n-button type="warning" @click="handleExport" size="small">
             <template #icon>
               <n-icon><Icon icon="mdi:file-export" /></n-icon>
             </template>
@@ -282,19 +385,30 @@ const handleExport = () => {
         <n-data-table
           :columns="columns"
           :data="tableList"
-          :pagination="pagination"
-          :bordered="false"
+          :pagination="paginationReactive"
           :row-key="row => row.dictId"
+          :bordered="false"
           :size="'small'"
           :max-height="'100%'"
           :scroll-x="1200"
-          @update:page="handlePageChange"
-          @update:page-size="handlePageSizeChange"
+          @update:checked-row-keys="handleCheck"
           striped
         />
-        <!-- @update:checked-row-keys="handleCheck" -->
       </div>
     </n-card>
+
+    <!-- 表单对话框 -->
+    <FormDialog
+      v-model:show="showForm"
+      title="添加字典类型"
+      :fields="formFields"
+      :form-data="formData"
+      :loading="loading"
+      :width="650"
+      :cols="2"
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
+    />
   </div>
 </template>
 

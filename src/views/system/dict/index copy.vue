@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { usePageTableHook } from '@/hooks/usePageTableHook'
 import { getDictType } from '@/api/system/dict'
+import { NTag, NButton, NSpace, NIcon, type DataTableColumns, useMessage } from 'naive-ui'
+import { Icon } from '@iconify/vue'
+import type { FormFieldConfig } from '@/components/FormDialog/index.vue'
 
 interface Query {
   dictName: string
   dictType: string
   status: string
-  range: string[]
+  range: [string, string] | null
 }
 
 interface TableItem {
@@ -21,24 +24,397 @@ interface TableItem {
   status: string
 }
 
-const { query, tableList, pagination } = usePageTableHook<Query, TableItem>(getDictType, {
+// 状态选项
+const statusOptions = [
+  { label: '正常', value: '0' },
+  { label: '停用', value: '1' }
+]
+
+// 使用消息提示
+const message = useMessage()
+
+// 使用hook获取表格数据
+const {
+  // 检索条件
+  query,
+  handleReset,
+  // 列表
+  tableList,
+  getList,
+  singleCheckedRow, // 单选key
+  checkedRowKeys, // 多选keys
+  handleCheck, // 行选择处理
+  // 分页
+  pagination,
+  handlePageChange,
+  handlePageSizeChange
+} = usePageTableHook<Query, TableItem>(getDictType, {
   dictName: '',
   dictType: '',
   status: '',
-  range: []
+  range: null
 })
-console.log('🚀 ~ pagination:', pagination)
-console.log('🚀 ~ query:', query)
-console.log('🚀 ~ tableList:', tableList)
+
+// 计算按钮状态
+const canEdit = computed(() => singleCheckedRow.value !== null)
+const canDelete = computed(() => checkedRowKeys.value.length > 0)
+
+// 定义表格列
+const columns: DataTableColumns<TableItem> = [
+  { type: 'selection' },
+  {
+    title: '字典编号',
+    key: 'dictId',
+    width: 100,
+    sorter: 'default'
+  },
+  {
+    title: '字典名称',
+    key: 'dictName'
+  },
+  {
+    title: '字典类型',
+    key: 'dictType'
+  },
+  {
+    title: '状态',
+    key: 'status',
+    width: 100,
+    render(row) {
+      return h(
+        NTag,
+        {
+          type: row.status === '0' ? 'success' : 'error',
+          size: 'small',
+          round: true,
+          bordered: false
+        },
+        { default: () => (row.status === '0' ? '正常' : '停用') }
+      )
+    }
+  },
+  {
+    title: '备注',
+    key: 'remark',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '创建者',
+    key: 'createBy'
+  },
+  {
+    title: '创建时间',
+    key: 'createTime',
+    width: 160
+  },
+  {
+    title: '操作',
+    key: 'actions',
+    width: 140,
+    fixed: 'right',
+    render(row) {
+      return h(
+        NSpace,
+        { size: 'small', justify: 'center' },
+        {
+          default: () => [
+            h(
+              NButton,
+              {
+                size: 'small',
+                quaternary: true,
+                type: 'primary',
+                onClick: () => handleEdit(row)
+              },
+              {
+                default: () => '修改'
+              }
+            ),
+            h(
+              NButton,
+              {
+                size: 'small',
+                quaternary: true,
+                type: 'error',
+                onClick: () => handleDelete(row)
+              },
+              {
+                default: () => '删除'
+              }
+            )
+          ]
+        }
+      )
+    }
+  }
+]
+
+// 处理新增
+const handleAdd = () => {
+  message.success('新增字典')
+  openAddForm()
+  // 这里可以添加新增字典的逻辑
+}
+
+// 处理编辑
+const handleEdit = (item: TableItem) => {
+  console.log('🚀 ~ handleEdit ~ item:', item)
+  // 这里可以添加编辑字典的逻辑
+}
+
+// 处理编辑
+const handleEditClick = () => {
+  const item = singleCheckedRow.value
+  if (item) handleEdit(item)
+  // 这里可以添加编辑字典的逻辑
+}
+
+// 处理删除
+const handleDelete = (row: TableItem) => {
+  message.warning(`删除字典: ${row.dictName}`)
+  // 这里可以添加删除字典的逻辑
+}
+// 处理删除
+const handleDeleteClick = () => {
+  const items = checkedRowKeys.value
+  console.log('🚀 ~ handleDeleteClick ~ items:', items)
+  // message.warning(`删除字典: ${row.dictName}`)
+  // 这里可以添加删除字典的逻辑
+}
+
+// 处理导出
+const handleExport = () => {
+  message.success('导出数据')
+  // 这里可以添加导出逻辑
+}
+
+/**
+ * 表单部分
+ */
+// 表单配置
+const formFields: FormFieldConfig[] = [
+  {
+    key: 'dictName',
+    label: '字典名称',
+    type: 'input',
+    placeholder: '请输入字典名称',
+    required: true,
+    span: 2
+  },
+  {
+    key: 'dictType',
+    label: '字典类型',
+    type: 'input',
+    placeholder: '请输入字典类型',
+    required: true,
+    span: 2
+  },
+  {
+    key: 'status',
+    label: '状态',
+    type: 'radio',
+    required: true,
+    options: [
+      { label: '正常', value: '0' },
+      { label: '停用', value: '1' }
+    ],
+    defaultValue: '0',
+    span: 2
+  },
+  {
+    key: 'remark',
+    label: '备注',
+    type: 'textarea',
+    placeholder: '请输入内容',
+    span: 2
+  }
+]
+// 表单显示状态
+const showForm = ref(false)
+// 表单数据
+const formData = reactive({
+  dictName: '',
+  dictType: '',
+  status: '0',
+  remark: ''
+})
+// 加载状态
+const loading = ref(false)
+
+// 打开添加表单
+const openAddForm = () => {
+  // 重置表单数据
+  Object.assign(formData, {
+    dictName: '',
+    dictType: '',
+    status: '0',
+    remark: ''
+  })
+  showForm.value = true
+}
+
+// 提交表单
+const handleConfirm = async (data: Record<string, any>) => {
+  loading.value = true
+  try {
+    // 模拟API调用
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    console.log('提交的数据:', data)
+    message.success('添加成功')
+    showForm.value = false
+    // 这里可以调用你的API来添加字典
+    // await addDictType(data)
+    // 添加成功后刷新列表
+    // getList()
+  } catch (error) {
+    console.error('添加失败:', error)
+    message.error('添加失败')
+  } finally {
+    loading.value = false
+  }
+}
+// 取消操作
+const handleCancel = () => {
+  message.info('已取消')
+}
 </script>
 
 <template>
-  <div class="h-full p-4">
-    <!-- 右侧主要内容 -->
-    <n-card>
-      <span>你好</span>
+  <div class="h-full w-full p-4">
+    <n-card class="flex h-full flex-col" :bordered="false" size="small">
+      <!-- 顶部检索条件 -->
+      <div class="mb-4 flex justify-between">
+        <div class="flex flex-1 items-center gap-4">
+          <!-- 字典名称 -->
+          <div class="flex items-center">
+            <span class="mr-2 whitespace-nowrap">字典名称：</span>
+            <n-input v-model:value="query.dictName" placeholder="请输入字典名称" clearable size="small" class="w-40" />
+          </div>
+
+          <!-- 字典类型 -->
+          <div class="flex items-center">
+            <span class="mr-2 whitespace-nowrap">字典类型：</span>
+            <n-input v-model:value="query.dictType" placeholder="请输入字典类型" clearable size="small" class="w-40" />
+          </div>
+
+          <!-- 状态 -->
+          <div class="flex items-center">
+            <span class="mr-2 whitespace-nowrap">状态：</span>
+            <n-select v-model:value="query.status" :options="statusOptions" placeholder="请选择状态" clearable size="small" class="w-32" />
+          </div>
+
+          <!-- 创建时间 -->
+          <div class="flex items-center">
+            <span class="mr-2 whitespace-nowrap">创建时间：</span>
+            <n-date-picker
+              v-model:formatted-value="query.range"
+              type="daterange"
+              value-format="yyyy-MM-dd"
+              placeholder="请选择创建时间范围"
+              clearable
+              size="small"
+              class="w-60"
+            />
+          </div>
+        </div>
+
+        <!-- 查询和重置按钮 -->
+        <div class="ml-4 flex items-center gap-2">
+          <n-button type="primary" @click="getList" size="small">
+            <template #icon>
+              <n-icon><Icon icon="mdi:magnify" /></n-icon>
+            </template>
+            查询
+          </n-button>
+          <n-button @click="handleReset" size="small">
+            <template #icon>
+              <n-icon><Icon icon="mdi:refresh" /></n-icon>
+            </template>
+            重置
+          </n-button>
+        </div>
+      </div>
+
+      <!-- 工具条按钮 -->
+      <div class="mb-4 flex">
+        <n-space>
+          <n-button type="primary" @click="handleAdd" size="small">
+            <template #icon>
+              <n-icon><Icon icon="mdi:plus" /></n-icon>
+            </template>
+            新增
+          </n-button>
+          <n-button type="info" @click="handleEditClick" size="small" :disabled="!canEdit">
+            <template #icon>
+              <n-icon><Icon icon="mdi:pencil" /></n-icon>
+            </template>
+            修改
+          </n-button>
+          <n-button type="error" @click="handleDeleteClick" size="small" :disabled="!canDelete">
+            <template #icon>
+              <n-icon><Icon icon="mdi:delete" /></n-icon>
+            </template>
+            删除
+          </n-button>
+          <n-button type="warning" @click="handleExport" size="small">
+            <template #icon>
+              <n-icon><Icon icon="mdi:file-export" /></n-icon>
+            </template>
+            导出
+          </n-button>
+        </n-space>
+      </div>
+
+      <!-- 表格区域 -->
+      <div class="flex flex-1 flex-col">
+        <n-data-table
+          :columns="columns"
+          :data="tableList"
+          :pagination="pagination"
+          :bordered="false"
+          :row-key="row => row.dictId"
+          :size="'small'"
+          :max-height="'100%'"
+          :scroll-x="1200"
+          @update:checked-row-keys="handleCheck"
+          @update:page="handlePageChange"
+          @update:page-size="handlePageSizeChange"
+          striped
+        />
+      </div>
     </n-card>
+
+    <!-- 表单对话框 -->
+    <FormDialog
+      v-model:show="showForm"
+      title="添加字典类型"
+      :fields="formFields"
+      :form-data="formData"
+      :loading="loading"
+      :width="650"
+      :cols="2"
+      @confirm="handleConfirm"
+      @cancel="handleCancel"
+    />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.n-data-table-td) {
+  padding: 8px !important;
+}
+
+:deep(.n-pagination) {
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+:deep(.n-tag) {
+  display: flex;
+  justify-content: center;
+  width: 60px;
+  padding: 0 8px;
+}
+</style>
