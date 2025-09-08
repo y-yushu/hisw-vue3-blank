@@ -27,6 +27,7 @@ const { query, tableList, pagination } = usePageTableHook<Query, TableItem>(getD
   status: '',
   range: []
 })
+console.log('🚀 ~ pagination:', pagination)
 console.log('🚀 ~ query:', query)
 console.log('🚀 ~ tableList:', tableList)
 </script>

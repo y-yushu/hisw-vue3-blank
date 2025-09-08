@@ -54,6 +54,7 @@ const handleCheck = (rowKeys: (string | number)[], rows: TableItem[]) => {
   checkedRowKeys.value = rowKeys
   singleCheckedRow.value = rows.length === 1 ? rows[0] : null
 }
+console.log('🚀 ~ handleCheck ~ handleCheck:', handleCheck)
 
 // 定义表格列
 const columns: DataTableColumns<TableItem> = [
