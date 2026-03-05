@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import legacy from '@vitejs/plugin-legacy'
 import tailwindcss from '@tailwindcss/vite'
 import svgLoader from 'vite-svg-loader'
 // 自动注入 naive-ui
@@ -16,6 +17,18 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       vue(),
+      legacy({
+        // 指定目标浏览器版本（Chrome 85 对应 es2020）
+        targets: ['Chrome >= 85'],
+        // 自动注入 polyfill
+        polyfills: [
+          'es.promise.allSettled', // Chrome 85 不支持此API
+          'es.string.at', // Chrome 85 不支持此API
+          'es.array.at' // 补充数组的at方法
+        ],
+        // 不生成IE兼容的产物（我们不需要）
+        modernPolyfills: true
+      }),
       tailwindcss(),
       svgLoader(),
       AutoImport({
